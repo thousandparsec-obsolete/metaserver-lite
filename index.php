@@ -174,41 +174,48 @@ switch ($_REQUEST['action']) {
 
 		break;
 	default:
-
 		$title = "Metaserver Server Listing";
-#		include "bits/start_page.inc";
+		include "bits/start_page.inc";
 
 		$now = time()-60*10;
-		$r = $db->query($sql_details, array($now));
-		if (DB::isError($r)) 
-			die(print_r($r, 1));
-		while ($r->fetchInto($row, DB_FETCHMODE_ASSOC)) {
-#			include "bits/start_section.inc";
+		$r = $db->getall($sql_number, array($now));
+		if ($r[0][0] == 0) {
+			include "bits/start_section.inc";
+			print "<p>No servers currently registered.</p>";
+			include "bits/end_section.inc";
+		} else {
+			$r = $db->query($sql_details, array($now));
+			if (DB::isError($r)) 
+				die(print_r($r, 1));
+			while ($r->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+				include "bits/start_section.inc";
 
-			print "<h1>{$row['name']}</h1>\n";
-			print "<p>Running on {$row['sertype']} (Version: {$row['server']})</p>\n";
-			print "<p>Playing {$row['rule']} (Version: {$row['rulever']})</p>\n";
-			print "<p>Can be connected to via:\n<ul>\n";
+				print "<h1>{$row['name']}</h1>\n";
+				print "<p>Running on {$row['sertype']} (Version: {$row['server']})</p>\n";
+				print "<p>Playing {$row['rule']} (Version: {$row['rulever']})</p>\n";
+				print "<p>Can be connected to via:\n<ul>\n";
 
-			$names = array(
-				'tp' 		=> 'Standard Connection',
-				'tps'		=> 'Secure Connection',
-				'tphttp'	=> 'HTTP Tunnel Connection',
-				'tphttps'	=> 'Secure HTTP Tunnel Connection',
-			);
-			// Get all the locations for this game
-			$gid   = $row['id'];
-			do {
-				print "<li>";
-				print "<a href='{$row['type']}://{$row['host']}:{$row['port']}/{$row['name']}'>";
-				print $names[$row{'type'}]." to ";
-				print "{$row['host']} ({$row['ip']}:{$row['port']})";
-				print "</a></li>\n";
-				if ($gid != $row['id'])
-					break;
-			} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
-			print "</ul></p>";
-#			include "bits/end_section.inc";
+				$names = array(
+					'tp' 		=> 'Standard Connection',
+					'tps'		=> 'Secure Connection',
+					'tphttp'	=> 'HTTP Tunnel Connection',
+					'tphttps'	=> 'Secure HTTP Tunnel Connection',
+				);
+				// Get all the locations for this game
+				$gid   = $row['id'];
+				do {
+					print "<li>";
+					print "<a href='{$row['type']}://{$row['host']}:{$row['port']}/{$row['name']}'>";
+					print $names[$row{'type'}]." to ";
+					print "{$row['host']} ({$row['ip']}:{$row['port']})";
+					print "</a></li>\n";
+					if ($gid != $row['id'])
+						break;
+				} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
+				print "</ul></p>";
+				include "bits/end_section.inc";
+			}
 		}
+		include "bits/end_page.inc";
 		break;
 }
