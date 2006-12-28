@@ -7,7 +7,7 @@ $dsn = "mysqli://metaserver:meatereater@localhost/metaserver";
 
 $db =& DB::connect ($dsn);
 if (DB::isError ($db)) {
-     die ("Cannot connect: " . $conn->getMessage () . "\n");
+     die ("Cannot connect: " . $db->getMessage () . "\n");
 }
 
 $sql_number = "
