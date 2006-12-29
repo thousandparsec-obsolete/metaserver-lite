@@ -134,18 +134,18 @@ switch ($_REQUEST['action']) {
 	case 'get':
 		$now = time()-60*10;
 		$r = $db->getall($sql_number, array($now));
-		$seq = new Frame(Frame::SEQUENCE, 0, array('no' => $r[0][0]));
-		$seq->pack();
-		print_r($seq);
+		$seq = new Frame(Frame::SEQUENCE, 1, array('no' => $r[0][0]));
+		print $seq->pack();
 
 		$r = $db->query($sql_details, array($now));
 		if (DB::isError($r)) 
-			die(print_r($r, 1));
+			die(new Frame(Frame::FAIL, 1, array('s' => print_r($r, 1))));
 
 		while ($r->fetchInto($row, DB_FETCHMODE_ASSOC)) {
 			$gid = $row['id'];
 			$details = array(
 				'name'		=> $row['name'],
+				'key'		=> '',
 				'tp'		=> explode(',', $row['tp']),
 				'server'	=> $row['server'],
 				'sertype'	=> $row['sertype'],
@@ -165,11 +165,10 @@ switch ($_REQUEST['action']) {
 					break;
 			} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
 
-			$details['lastseen'] = $lastseen;
+			// $details['lastseen'] = $lastseen;
 
-			$game = new Frame(Frame::GAMES, 0, $details);
-			$game->pack();
-			print_r($game);
+			$game = new Frame(Frame::GAME, 1, $details);
+			print $game->pack();
 		}
 
 		break;
