@@ -42,7 +42,6 @@ switch ($_REQUEST['action']) {
 				die("Required key $r doesn't exist!");
 
 		$result = $db->getall("SELECT `key` FROM games WHERE name = ?", array($_REQUEST['name']));
-		var_dump($result);
 		if (sizeof($result) > 0) {
 			if (strcmp($result[0][0], $_REQUEST['key']) !== 0)
 				die ("Key was not valid...");
@@ -67,7 +66,6 @@ switch ($_REQUEST['action']) {
 
 		// Get the ID
 		$result = $db->getall("SELECT `id` FROM games WHERE name = ?", array($_REQUEST['name']));
-		print_r($result);
 		$gid = $result[0][0];
 
 		// Find the location details
@@ -215,7 +213,7 @@ switch ($_REQUEST['action']) {
 					if ($gid != $row['id'])
 						break;
 					print "<li>";
-					print "<a href='{$row['type']}://{$row['host']}:{$row['port']}/{$row['name']}'>";
+					print "<a href='{$row['type']}://{$row['host']}:{$row['port']}/".urlencode("{$row['name']}")."'>";
 					print $names[$row{'type'}]." to ";
 					print "{$row['host']} ({$row['ip']}:{$row['port']})";
 					print "</a></li>\n";
