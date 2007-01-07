@@ -141,7 +141,11 @@ switch ($_REQUEST['action']) {
 		if (DB::isError($r)) 
 			die(new Frame(Frame::FAIL, 1, array('s' => print_r($r, 1))));
 
-		while ($r->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+		$r->fetchInto($row, DB_FETCHMODE_ASSOC);
+		while (true) {
+			if (sizeof($row) == 0)
+				break;
+
 			$gid = $row['id'];
 			$details = array(
 				'name'		=> $row['name'],
@@ -187,7 +191,11 @@ switch ($_REQUEST['action']) {
 			$r = $db->query($sql_details, array($now));
 			if (DB::isError($r)) 
 				die(print_r($r, 1));
-			while ($r->fetchInto($row, DB_FETCHMODE_ASSOC)) {
+			$r->fetchInto($row, DB_FETCHMODE_ASSOC);
+			while (true) {
+				if (sizeof($row) == 0)
+					break;
+
 				include "bits/start_section.inc";
 
 				print "<h1>{$row['name']}</h1>\n";
