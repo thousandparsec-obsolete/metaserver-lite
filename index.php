@@ -158,11 +158,12 @@ switch ($_REQUEST['action']) {
 			// Get all the locations for this game
 			$gid   = $row['id'];
 			do {
+				if ($gid != $row['id'])
+					break;
+
 				$details['locations'][] = array($row['type'], $row['host'], $row['ip'], $row['port']);
 
 				$lastseen = max($row['lastseen'], $lastseen);
-				if ($gid != $row['id'])
-					break;
 			} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
 
 			// $details['lastseen'] = $lastseen;
@@ -203,13 +204,13 @@ switch ($_REQUEST['action']) {
 				// Get all the locations for this game
 				$gid   = $row['id'];
 				do {
+					if ($gid != $row['id'])
+						break;
 					print "<li>";
 					print "<a href='{$row['type']}://{$row['host']}:{$row['port']}/{$row['name']}'>";
 					print $names[$row{'type'}]." to ";
 					print "{$row['host']} ({$row['ip']}:{$row['port']})";
 					print "</a></li>\n";
-					if ($gid != $row['id'])
-						break;
 				} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
 				print "</ul></p>";
 				include "bits/end_section.inc";
