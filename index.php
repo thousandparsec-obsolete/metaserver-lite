@@ -41,6 +41,10 @@ switch ($_REQUEST['action']) {
 			if (!array_key_exists($r, $_REQUEST))
 				die("Required key $r doesn't exist!");
 
+		print "<pre>";
+		var_dump($_REQUEST);
+		print "</pre>";
+
 		$result = $db->getall("SELECT `key` FROM games WHERE name = ?", array($_REQUEST['name']));
 		if (sizeof($result) > 0) {
 			if (strcmp($result[0][0], $_REQUEST['key']) !== 0)
