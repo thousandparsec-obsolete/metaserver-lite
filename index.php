@@ -176,7 +176,17 @@ switch ($_REQUEST['action']) {
 			if (sizeof($row) == 0)
 				break;
 
+
 			$gid = $row['id'];
+
+			$optional = array();
+			$optional_index = array('', 'plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
+			foreach($db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now)) as $key => $value) {
+				if (is_numeric($value))
+					$optional[] = array(array_search($key, $optional_index), "", $value);
+				else
+					$optional[] = array(array_search($key, $optional_index), $value, 0);
+			}
 			$details = array(
 				'name'		=> $row['name'],
 				'key'		=> '',
@@ -186,7 +196,7 @@ switch ($_REQUEST['action']) {
 				'rule'		=> $row['rule'],
 				'rulever'	=> $row['rulever'],
 				'locations'	=> array(),
-				'optional'  => $db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now)),
+				'optional'  => $optional,
 			);
 
 			// Get all the locations for this game
