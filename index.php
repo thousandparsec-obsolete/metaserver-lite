@@ -33,6 +33,25 @@ WHERE
 ORDER BY
 	games.id";
 
+$sql_optional = "
+SELECT
+	SUM(value)
+FROM
+	optional
+WHERE
+	lastseen > ? AND `key` = ?";
+$sql_optional_servers = "
+SELECT
+	count(DISTINCT games.id)
+FROM
+	games
+JOIN
+	optional ON games.id = optional.gid 
+WHERE 
+	optional.lastseen > ? AND optional.key = ?";
+
+$time = time();
+
 switch ($_REQUEST['action']) {
 	case 'update':
 		// Check all the required properties exist in the request
@@ -52,7 +71,7 @@ switch ($_REQUEST['action']) {
 
 			// Update the required values
 			$r = $db->query("UPDATE games SET lastseen=?, tp=?, server=?, sertype=?, rule=?, rulever=? WHERE name=?", array(
-							time(), 
+							$time, 
 							$_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
 							$_REQUEST['rule'],   $_REQUEST['rulever'],
@@ -60,7 +79,7 @@ switch ($_REQUEST['action']) {
 		} else {
 			$r = $db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", array(
 							$_REQUEST['name'],	$_REQUEST['key'],
-							time(), 
+							$time, 
 							$_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
 							$_REQUEST['rule'],   $_REQUEST['rulever']));
@@ -126,11 +145,20 @@ switch ($_REQUEST['action']) {
 
 			// Add or update this location
 			$r = $db->query("REPLACE INTO locations (gid, `type`, host, ip, port, lastseen) VALUES (?, ?, ?, ?, ?, ?)",
-							array($gid, $type, $host, join($addr, '.'), $location['port'], time()));
+							array($gid, $type, $host, join($addr, '.'), $location['port'], $time));
 			if (DB::isError($r)) 
 				die(print_r($r, 1));
 		}
+
 		// Update the optional properties
+		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
+		foreach ($optional as $option) {
+			if (!array_key_exists($option, $_REQUEST))
+				continue;
+			$r = $db->query("REPLACE INTO optional (gid, `key`, value, lastseen) VALUES (?, ?, ?, ?)",
+							array($gid, $option, $_REQUEST[$option], $time));
+		}
+
 		break;
 
 	case 'get':
@@ -158,7 +186,7 @@ switch ($_REQUEST['action']) {
 				'rule'		=> $row['rule'],
 				'rulever'	=> $row['rulever'],
 				'locations'	=> array(),
-				'optional'  => array(),
+				'optional'  => $db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now)),
 			);
 
 			// Get all the locations for this game
@@ -172,8 +200,6 @@ switch ($_REQUEST['action']) {
 				$lastseen = max($row['lastseen'], $lastseen);
 			} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
 
-			// $details['lastseen'] = $lastseen;
-
 			$game = new Frame(Frame::GAME, 1, $details);
 			print $game->pack();
 		}
@@ -184,12 +210,63 @@ switch ($_REQUEST['action']) {
 		include "bits/start_page.inc";
 
 		$now = time()-60*10;
-		$r = $db->getall($sql_number, array($now));
-		if ($r[0][0] == 0) {
+
+		// Get all the statistics
+		$servers = $db->getall($sql_number, array($now));
+		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
+
+		$players = $db->getall($sql_optional, array($now, 'plys'));
+		if (is_null($players[0][0]))
+			$players[0][0] = 0;
+		$players_servers = $db->getall($sql_optional_servers, array($now, 'plys'));
+		$connect = $db->getall($sql_optional, array($now, 'cons'));
+		if (is_null($connect[0][0]))
+			$connect[0][0] = 0;
+		$connect_servers = $db->getall($sql_optional_servers, array($now, 'cons'));
+		$objects = $db->getall($sql_optional, array($now, 'objs'));
+		if (is_null($objects[0][0]))
+			$objects[0][0] = 0;
+		$objects_servers = $db->getall($sql_optional_servers, array($now, 'objs'));
+?>
+
+<div id="right" style="width: 300px;">
+<?php include "bits/start_section.inc"; ?> 
+<div class="stats">
+<table>
+	<tr>
+		<td><b>Servers Registered:</b></td>
+		<td><?php echo $servers[0][0]; ?></td>
+	</tr>
+	<tr>
+		<td><b>Clients Connected:</b></td>
+		<td><?php echo "{$connect[0][0]} on {$connect_servers[0][0]} servers";  ?></td>
+	</tr>
+	<tr>
+		<td><b>Players Playing:</b></td>
+		<td><?php echo "{$players[0][0]} on {$players_servers[0][0]} servers";  ?></td>
+	</tr>
+	<tr>
+		<td><b>Objects Existing:</b></td>
+		<td><?php echo "{$objects[0][0]} on {$objects_servers[0][0]} servers";  ?></td>
+	</tr>
+	<tr>
+		<td><b>~Objects Per Server:</b></td>
+		<td><?php echo $objects[0][0]/$objects_servers[0][0];  ?></td>
+	</tr>
+</table>
+</div>
+<?php include "bits/end_section.inc"; ?> 
+</div>
+
+<?php
+		print '<div id="left" style="margin: 0 310px 0 0;">';
+	 
+		if ($servers[0][0] == 0) {
 			include "bits/start_section.inc";
 			print "<p>No servers currently registered.</p>";
 			include "bits/end_section.inc";
 		} else {
+			include "bits/start_section.inc";
 			$r = $db->query($sql_details, array($now));
 			if (DB::isError($r)) 
 				die(print_r($r, 1));
@@ -198,11 +275,40 @@ switch ($_REQUEST['action']) {
 				if (sizeof($row) == 0)
 					break;
 
-				include "bits/start_section.inc";
+				$gid   = $row['id'];
 
-				print "<h1>{$row['name']}</h1>\n";
-				print "<p>Running on {$row['sertype']} (Version: {$row['server']})</p>\n";
-				print "<p>Playing {$row['rule']} (Version: {$row['rulever']})</p>\n";
+				// Get all the optional information
+				$optional = $db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now));
+
+				print "<h2>{$row['name']}</h2>\n";
+				print "<p>Running on {$row['sertype']} (Version: {$row['server']}) playing {$row['rule']} (Version: {$row['rulever']}) - {$optional['cmt']}</p>\n";
+
+				//$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
+
+				print "<p>";
+				if (array_key_exists('turn', $optional)) {
+					$date = gmdate("H:i:s, M d Y", $optional['turn']);
+					$away = $optional['turn']-time();
+
+					if ($away < 0)
+						$away = "now";
+					print "The next turn will be generated at $date (UTC) which is ~$away seconds away. ";
+				}
+
+				if (array_key_exists('cons', $optional))
+					print "There are currently {$optional['cons']} clients connected. ";
+				if (array_key_exists('plys', $optional))
+					print "The game has currently {$optional['plys']} players. ";
+				if (array_key_exists('objs', $optional))
+					print "The Universe currently has {$optional['objs']} objects. ";
+				if (array_key_exists('admin', $optional)) {
+					// FIXME: Should obscure the email somehow...
+					$email = $optional['admin'];
+					print "The admin contact for this server is <a href='mailto:$email'>$email</a>.";
+				}
+				print "</p>";
+
+				// Get all the locations for this game
 				print "<p>Can be connected to via:\n<ul>\n";
 
 				$names = array(
@@ -211,8 +317,7 @@ switch ($_REQUEST['action']) {
 					'tphttp'	=> 'HTTP Tunnel Connection',
 					'tphttps'	=> 'Secure HTTP Tunnel Connection',
 				);
-				// Get all the locations for this game
-				$gid   = $row['id'];
+
 				do {
 					if ($gid != $row['id'])
 						break;
@@ -223,9 +328,11 @@ switch ($_REQUEST['action']) {
 					print "</a></li>\n";
 				} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
 				print "</ul></p>";
-				include "bits/end_section.inc";
 			}
+			include "bits/end_section.inc";
 		}
+
+		print "</div>";
 		include "bits/end_page.inc";
 		break;
 }

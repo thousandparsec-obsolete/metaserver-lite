@@ -32,18 +32,7 @@ CREATE TABLE `games` (
   `rulever` tinyblob NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `games`
---
-
-
-/*!40000 ALTER TABLE `games` DISABLE KEYS */;
-LOCK TABLES `games` WRITE;
-INSERT INTO `games` VALUES (6,'MyGame','peanut',1167325082,'0.3,0.2','0.3.0','tpserver-cpp','MiniSec','0.1');
-UNLOCK TABLES;
-/*!40000 ALTER TABLE `games` ENABLE KEYS */;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 --
 -- Table structure for table `locations`
@@ -60,18 +49,20 @@ CREATE TABLE `locations` (
   `lastseen` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `location` (`gid`,`type`,`ip`,`port`)
+) ENGINE=MyISAM AUTO_INCREMENT=426 DEFAULT CHARSET=latin1;
+
+--
+-- Table structure for table `optional`
+--
+
+DROP TABLE IF EXISTS `optional`;
+CREATE TABLE `optional` (
+  `gid` bigint(20) NOT NULL,
+  `key` varchar(10) NOT NULL,
+  `value` varchar(255) NOT NULL,
+  `lastseen` bigint(20) NOT NULL,
+  PRIMARY KEY  (`gid`,`key`)
 ) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `locations`
---
-
-
-/*!40000 ALTER TABLE `locations` DISABLE KEYS */;
-LOCK TABLES `locations` WRITE;
-INSERT INTO `locations` VALUES (5,6,'tp','mithro.dyndns.org','203.122.246.117',0,1167326954),(6,6,'tp','lester.mithis.com','69.60.120.93',0,1167326954),(12,6,'tp','lester.mithis.com','69.60.120.93',8000,1167326954),(10,6,'tp','mithro.dyndns.org','203.122.246.117',8000,1167326954);
-UNLOCK TABLES;
-/*!40000 ALTER TABLE `locations` ENABLE KEYS */;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
