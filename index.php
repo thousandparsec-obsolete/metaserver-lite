@@ -251,7 +251,7 @@ switch ($_REQUEST['action']) {
 	</tr>
 	<tr>
 		<td><b>~Objects Per Server:</b></td>
-		<td><?php echo $objects[0][0]/$objects_servers[0][0];  ?></td>
+		<td><?php if ($objects_servers[0][0] > 0) echo $objects[0][0]/$objects_servers[0][0];  ?></td>
 	</tr>
 </table>
 </div>
