@@ -235,26 +235,10 @@ switch ($_REQUEST['action']) {
 			$objects[0][0] = 0;
 		$objects_servers = $db->getall($sql_optional_servers, array($now, 'objs'));
 ?>
-<div class="stats">
-<table>
-	<tr>
-		<td><b style="small">Servers Registered:</b></td>
-		<td><?php echo $servers[0][0]; ?></td>
-	</tr>
-	<tr>
-		<td><span style="small">Players Playing:</span></td>
-		<td><?php echo "{$players[0][0]} <span style='ultrasmall'>on {$players_servers[0][0]} srvs</span>";  ?></td>
-	</tr>
-	<tr>
-		<td><span style="small">Objects Existing:</span></td>
-		<td><?php echo "{$objects[0][0]} <span style='ultrasmall'>on {$objects_servers[0][0]} srvs</span>";  ?></td>
-	</tr>
-	<tr>
-		<td><span style="small">~Objects Per Server:</span></td>
-		<td><?php if ($objects_servers[0][0] > 0) echo $objects[0][0]/$objects_servers[0][0];  ?></td>
-	</tr>
-</table>
-</div>
+<span style="small">Servers:</span> <?php echo $servers[0][0]; ?><br />
+<span style="small">Players:</span> <?php echo "{$players[0][0]} <span style='ultrasmall'>on {$players_servers[0][0]} srvs</span>";  ?><br />
+<span style="small">Objects:</span> <?php echo "{$objects[0][0]} <span style='ultrasmall'>on {$objects_servers[0][0]} srvs</span>";  ?><br />
+<span style="small">~Obj Per Srv:</span> <?php if ($objects_servers[0][0] > 0) echo $objects[0][0]/$objects_servers[0][0];  ?><br />
 <?php
 		break;
 	default:
