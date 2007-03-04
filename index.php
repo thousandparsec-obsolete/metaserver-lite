@@ -215,6 +215,48 @@ switch ($_REQUEST['action']) {
 		}
 
 		break;
+	case 'badge':
+		$now = time()-60*10;
+
+		// Get all the statistics
+		$servers = $db->getall($sql_number, array($now));
+		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
+
+		$players = $db->getall($sql_optional, array($now, 'plys'));
+		if (is_null($players[0][0]))
+			$players[0][0] = 0;
+		$players_servers = $db->getall($sql_optional_servers, array($now, 'plys'));
+		$connect = $db->getall($sql_optional, array($now, 'cons'));
+		if (is_null($connect[0][0]))
+			$connect[0][0] = 0;
+		$connect_servers = $db->getall($sql_optional_servers, array($now, 'cons'));
+		$objects = $db->getall($sql_optional, array($now, 'objs'));
+		if (is_null($objects[0][0]))
+			$objects[0][0] = 0;
+		$objects_servers = $db->getall($sql_optional_servers, array($now, 'objs'));
+?>
+<div class="stats">
+<table>
+	<tr>
+		<td><b style="small">Servers Registered:</b></td>
+		<td><?php echo $servers[0][0]; ?></td>
+	</tr>
+	<tr>
+		<td><span style="small">Players Playing:</span></td>
+		<td><?php echo "{$players[0][0]} <span style='ultrasmall'>on {$players_servers[0][0]} srvs</span>";  ?></td>
+	</tr>
+	<tr>
+		<td><span style="small">Objects Existing:</span></td>
+		<td><?php echo "{$objects[0][0]} <span style='ultrasmall'>on {$objects_servers[0][0]} srvs</span>";  ?></td>
+	</tr>
+	<tr>
+		<td><span style="small">~Objects Per Server:</span></td>
+		<td><?php if ($objects_servers[0][0] > 0) echo $objects[0][0]/$objects_servers[0][0];  ?></td>
+	</tr>
+</table>
+</div>
+<?php
+		break;
 	default:
 		$title = "Metaserver Server Listing";
 		include "bits/start_page.inc";
