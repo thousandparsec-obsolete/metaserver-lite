@@ -54,8 +54,14 @@ $time = time();
 
 switch ($_REQUEST['action']) {
 	case 'update':
+		$name_param = 'ln';
+		$next_param = 'next';
+		if(!(isset($_REQUEST[$name_param]) || isset($_REQUEST['sn']) || isset($_REQUEST[$next_param]))){
+		  $name_param = 'name';
+		  $next_param = 'turn';
+		}
 		// Check all the required properties exist in the request
-		$required = array('name', 'tp', 'server', 'sertype', 'rule', 'rulever');
+		$required = array($name_param, 'tp', 'server', 'sertype', 'rule', 'rulever');
 		foreach ($required as $r)
 			if (!array_key_exists($r, $_REQUEST))
 				die("Required key $r doesn't exist!");
@@ -64,7 +70,7 @@ switch ($_REQUEST['action']) {
 		var_dump($_REQUEST);
 		print "</pre>";
 
-		$result = $db->getall("SELECT `key` FROM games WHERE name = ?", array($_REQUEST['name']));
+		$result = $db->getall("SELECT `key` FROM games WHERE name = ?", array($_REQUEST[$name_param]));
 		if (sizeof($result) > 0) {
 			if (strcmp($result[0][0], $_REQUEST['key']) !== 0)
 				die ("Key was not valid...");
@@ -75,10 +81,10 @@ switch ($_REQUEST['action']) {
 							$_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
 							$_REQUEST['rule'],   $_REQUEST['rulever'],
-							$_REQUEST['name']));
+							$_REQUEST[$name_param]));
 		} else {
 			$r = $db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", array(
-							$_REQUEST['name'],	$_REQUEST['key'],
+							$_REQUEST[$name_param],	$_REQUEST['key'],
 							$time, 
 							$_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
@@ -88,7 +94,7 @@ switch ($_REQUEST['action']) {
 			die(print_r($r, 1));
 
 		// Get the ID
-		$result = $db->getall("SELECT `id` FROM games WHERE name = ?", array($_REQUEST['name']));
+		$result = $db->getall("SELECT `id` FROM games WHERE name = ?", array($_REQUEST[$name_param]));
 		$gid = $result[0][0];
 
 		// Find the location details
@@ -151,12 +157,16 @@ switch ($_REQUEST['action']) {
 		}
 
 		// Update the optional properties
-		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
+		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt');
 		foreach ($optional as $option) {
 			if (!array_key_exists($option, $_REQUEST))
 				continue;
 			$r = $db->query("REPLACE INTO optional (gid, `key`, value, lastseen) VALUES (?, ?, ?, ?)",
 							array($gid, $option, $_REQUEST[$option], $time));
+		}
+		if(array_key_exists($next_param, $_REQUEST)){
+			$r = $db->query("REPLACE INTO optional (gid, `key`, value, lastseen) VALUES (?, ?, ?, ?)",
+							array($gid, 'turn', $_REQUEST[$next_param], $time));
 		}
 
 		break;
