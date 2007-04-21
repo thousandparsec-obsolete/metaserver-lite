@@ -5,9 +5,56 @@ require_once "libtpproto-php/Frame.php";
 
 $dsn = "mysqli://metaserver:meatereater@localhost/metaserver";
 
-$db =& DB::connect ($dsn);
-if (DB::isError ($db)) {
-     die ("Cannot connect: " . $db->getMessage () . "\n");
+class Backend {
+	public function __construct($dsn, $now) {
+		$db =& DB::connect ($dsn);
+		if (DB::isError ($db)) {
+			 die ("Cannot connect: " . $db->getMessage () . "\n");
+		}
+
+		$this->db  = $db;
+		$this->now = $now;
+	}
+
+	/*
+	 * Returns the number of games currently avalible.
+	 */
+	public function games_number() {
+		;
+	}
+
+	/*
+	 */ 
+	public function games() {
+		class games_iter {
+			public function __construct($db) {
+				$this->res = 
+			}
+
+			public function fetchInto(&$row) {
+			}
+	}
+
+	public function game_details($gid) {
+
+	}
+	
+
+}
+
+class Games {
+	/* Required parameters */
+	public static var $required = array('name', 'tp', 'server', 'sertype', 'rule', 'rulever');
+	/* Optional parameters */
+	public static var $optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
+
+	public static function optional_index($key) {
+		if (!in_array($Games::optional, $key))
+			// Raise an exception
+			throw new Exception("$key is not a valid optional parameter.");
+		return array_search($key, $Games::optional)+1;
+	}
+
 }
 
 $sql_number = "
