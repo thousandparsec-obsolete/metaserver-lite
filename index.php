@@ -1,5 +1,9 @@
 <?php
 
+/*
+test
+*/
+
 require_once "DB.php";
 require_once "libtpproto-php/Frame.php";
 
