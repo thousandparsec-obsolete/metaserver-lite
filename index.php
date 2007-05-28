@@ -118,7 +118,7 @@ switch ($_REQUEST['action']) {
 		// Validate the location stuff
 		foreach ($locations as $location) {
 			// Validate/format the data
-			$valid_types = array('tp', 'tps', 'tphttp', 'tphttps');
+			$valid_types = array('tp', 'tps', 'tp+http', 'tp+https');
 
 			$type = $location['type'];
 			if (!in_array($type, $valid_types))
