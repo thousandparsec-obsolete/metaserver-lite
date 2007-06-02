@@ -360,8 +360,8 @@ switch ($_REQUEST['action']) {
 				$names = array(
 					'tp' 		=> 'Standard Connection',
 					'tps'		=> 'Secure Connection',
-					'tphttp'	=> 'HTTP Tunnel Connection',
-					'tphttps'	=> 'Secure HTTP Tunnel Connection',
+					'tp+http'	=> 'HTTP Tunnel Connection',
+					'tp+https'	=> 'Secure HTTP Tunnel Connection',
 				);
 
 				do {
