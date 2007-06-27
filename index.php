@@ -5,56 +5,23 @@ test
 */
 
 require_once "DB.php";
-require_once "libtpproto-php/Frame.php";
+require_once "class/Backend.php";
 
-$dsn = "mysqli://metaserver:meatereater@localhost/metaserver";
+//require_once "libtpproto-php/Frame.php";
 
-$db =& DB::connect ($dsn);
-if (DB::isError ($db)) {
-     die ("Cannot connect: " . $db->getMessage () . "\n");
-}
 
-$sql_number = "
-SELECT
-	count(DISTINCT games.id)
-FROM
-	games
-JOIN
-	locations ON games.id = locations.gid 
-WHERE 
-	locations.lastseen > ?";
 
-$sql_details = "
-SELECT 
-	games.id, name, tp, server, sertype, rule, rulever, 
-	type, host, ip, port, locations.lastseen AS lastseen
-FROM 
-	games 
-JOIN 
-	locations ON games.id = locations.gid
-WHERE 
-	locations.lastseen > ?
-ORDER BY
-	games.id";
+//$dsn = "mysqli://metaserver:meatereater@localhost/metaserver";
 
-$sql_optional = "
-SELECT
-	SUM(value)
-FROM
-	optional
-WHERE
-	lastseen > ? AND `key` = ?";
-$sql_optional_servers = "
-SELECT
-	count(DISTINCT games.id)
-FROM
-	games
-JOIN
-	optional ON games.id = optional.gid 
-WHERE 
-	optional.lastseen > ? AND optional.key = ?";
+//
+$dsn = "mysqli://intart2_8:parsec@sql.intart2.nazwa.pl:3305/intart2_8";
 
 $time = time();
+
+$db = new Backend($dsn, $time);
+
+
+// to consider: change switch for some kind of class/function responsible for all action
 
 switch ($_REQUEST['action']) {
 	case 'update':
@@ -67,35 +34,36 @@ switch ($_REQUEST['action']) {
 		print "<pre>";
 		var_dump($_REQUEST);
 		print "</pre>";
-
-		$result = $db->getall("SELECT `key` FROM games WHERE name = ?", array($_REQUEST['name']));
+		$result = $db->get_key( $_REQUEST['name'] );
 		if (sizeof($result) > 0) {
 			if (strcmp($result[0][0], $_REQUEST['key']) !== 0)
 				die ("Key was not valid...");
 
 			// Update the required values
-			$r = $db->query("UPDATE games SET lastseen=?, tp=?, server=?, sertype=?, rule=?, rulever=? WHERE name=?", array(
-							$time, 
-							$_REQUEST['tp'], 
+			$r = $db->update($_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
 							$_REQUEST['rule'],   $_REQUEST['rulever'],
-							$_REQUEST['name']));
+							$_REQUEST['name']);
 		} else {
-			$r = $db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", array(
-							$_REQUEST['name'],	$_REQUEST['key'],
-							$time, 
+			$r = $db->insert(
+							$_REQUEST['name'],	$_REQUEST['key'], 
 							$_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
-							$_REQUEST['rule'],   $_REQUEST['rulever']));
+							$_REQUEST['rule'],   $_REQUEST['rulever']);
 		}
 		if (DB::isError($r)) 
 			die(print_r($r, 1));
 
 		// Get the ID
-		$result = $db->getall("SELECT `id` FROM games WHERE name = ?", array($_REQUEST['name']));
-		$gid = $result[0][0];
+		$gid = $db->get_id( $_REQUEST['name'] );
+	
+		
 
+		 
 		// Find the location details
+		
+		
+		
 		$location_values = array('type', 'dns', 'ip', 'port');
 		$locations = array();
 		while (1) {
@@ -148,10 +116,10 @@ switch ($_REQUEST['action']) {
 				die("host name didn't resolve to ip $ip address given"); 
 
 			// Add or update this location
-			$r = $db->query("REPLACE INTO locations (gid, `type`, host, ip, port, lastseen) VALUES (?, ?, ?, ?, ?, ?)",
-							array($gid, $type, $host, join($addr, '.'), $location['port'], $time));
-			if (DB::isError($r)) 
-				die(print_r($r, 1));
+			
+			
+			$r = $db->replace_location($gid, $type, $host, join($addr, '.'), $location['port'] );
+			
 		}
 
 		// Update the optional properties
@@ -167,14 +135,35 @@ switch ($_REQUEST['action']) {
 
 	case 'get':
 		$now = time()-60*10;
-		$r = $db->getall($sql_number, array($now));
-		$seq = new Frame(Frame::SEQUENCE, 1, array('no' => $r[0][0]));
-		print $seq->pack();
+		
+		
+		$r = $db->games_number();
+		
+		
+		//$seq = new Frame(Frame::SEQUENCE, 1, array('no' => $r));
+		//print $seq->pack();
+		$sql_details = "
+      SELECT
+      	games.id, name, tp, server, sertype, rule, rulever,
+      	type, host, ip, port, locations.lastseen AS lastseen
+      FROM
+      	games
+      JOIN
+      	locations ON games.id = locations.gid
+      WHERE
+      	locations.lastseen > ?
+      ORDER BY
+      	games.id";
+		$r =& $db->db->getall( $sql_details, array($time) );
+	
+			if (DB::isError ($r)) {	
+			 die ("Error: " . $r->getMessage () . "\n");
+			}
+	
+		//if (DB::isError($r)) 
+		//	die(new Frame(Frame::FAIL, 1, array('s' => print_r($r, 1))));
 
-		$r = $db->query($sql_details, array($now));
-		if (DB::isError($r)) 
-			die(new Frame(Frame::FAIL, 1, array('s' => print_r($r, 1))));
-
+		 
 		$r->fetchInto($row, DB_FETCHMODE_ASSOC);
 		while (true) {
 			if (sizeof($row) == 0)
@@ -185,7 +174,7 @@ switch ($_REQUEST['action']) {
 
 			$optional = array();
 			$optional_index = array('', 'plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
-			foreach($db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now)) as $key => $value) {
+			foreach($db->db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now)) as $key => $value) {
 				if (is_numeric($value))
 					$optional[] = array(array_search($key, $optional_index), "", $value);
 				else
@@ -226,21 +215,31 @@ switch ($_REQUEST['action']) {
 		$now = time()-60*10;
 
 		// Get all the statistics
-		$servers = $db->getall($sql_number, array($now));
+		$servers = $db->games_number();
+		
 		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
 
-		$players = $db->getall($sql_optional, array($now, 'plys'));
+		$players = $db->get_optional('plys');
+		
 		if (is_null($players[0][0]))
 			$players[0][0] = 0;
-		$players_servers = $db->getall($sql_optional_servers, array($now, 'plys'));
-		$connect = $db->getall($sql_optional, array($now, 'cons'));
+			
+		$players_servers = $db->get_optional_servers('plys');
+		
+		
+		$connect = $db->get_optional('cons');
+		
 		if (is_null($connect[0][0]))
 			$connect[0][0] = 0;
-		$connect_servers = $db->getall($sql_optional_servers, array($now, 'cons'));
-		$objects = $db->getall($sql_optional, array($now, 'objs'));
+		$connect_servers = $db->get_optional_servers('cons');
+		
+
+		$objects = $db->get_optional('objs');
+		
+		
 		if (is_null($objects[0][0]))
 			$objects[0][0] = 0;
-		$objects_servers = $db->getall($sql_optional_servers, array($now, 'objs'));
+		$objects_servers = $db->get_optional_servers('objs');
 ?>
 
 <div id="right" style="width: 300px;">
@@ -249,7 +248,7 @@ switch ($_REQUEST['action']) {
 <table>
 	<tr>
 		<td><b>Servers Registered:</b></td>
-		<td><?php echo $servers[0][0]; ?></td>
+		<td><?php echo $servers; ?></td>
 	</tr>
 	<tr>
 		<td><b>Clients Connected:</b></td>
@@ -275,7 +274,7 @@ switch ($_REQUEST['action']) {
 <?php
 		print '<div id="left" style="margin: 0 310px 0 0;">';
 	 
-		if ($servers[0][0] == 0) {
+		if ($servers == 0) {
 			include "bits/start_section.inc";
 			print "<p>No servers currently registered.</p>";
 			include "bits/end_section.inc";
