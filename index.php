@@ -154,7 +154,7 @@ switch ($_REQUEST['action']) {
       	locations.lastseen > ?
       ORDER BY
       	games.id";
-		$r =& $db->db->getall( $sql_details, array($time) );
+		$r =& $db->db->query( $sql_details, array($now) );
 	
 			if (DB::isError ($r)) {	
 			 die ("Error: " . $r->getMessage () . "\n");
@@ -163,7 +163,7 @@ switch ($_REQUEST['action']) {
 		//if (DB::isError($r)) 
 		//	die(new Frame(Frame::FAIL, 1, array('s' => print_r($r, 1))));
 
-		 
+		
 		$r->fetchInto($row, DB_FETCHMODE_ASSOC);
 		while (true) {
 			if (sizeof($row) == 0)
@@ -203,16 +203,18 @@ switch ($_REQUEST['action']) {
 				$lastseen = max($row['lastseen'], $lastseen);
 			} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
 
-			$game = new Frame(Frame::GAME, 1, $details);
-			print $game->pack();
+			//$game = new Frame(Frame::GAME, 1, $details);
+			//print $game->pack();
+			echo "Frame print disabled.<br />";
 		}
 
 		break;
 	default:
 		$title = "Metaserver Server Listing";
 		include "bits/start_page.inc";
+		
+		$db->substract_from_time(60*10);
 
-		$now = time()-60*10;
 
 		// Get all the statistics
 		$servers = $db->games_number();
@@ -280,7 +282,24 @@ switch ($_REQUEST['action']) {
 			include "bits/end_section.inc";
 		} else {
 			include "bits/start_section.inc";
-			$r = $db->query($sql_details, array($now));
+			
+			// @TODO: it should be in function !!!
+			$sql_details = "
+      SELECT
+      	games.id, name, tp, server, sertype, rule, rulever,
+      	type, host, ip, port, locations.lastseen AS lastseen
+      FROM
+      	games
+      JOIN
+      	locations ON games.id = locations.gid
+      WHERE
+      	locations.lastseen > ?
+      ORDER BY
+      	games.id";
+      	
+      	
+			$r = $db->db->query($sql_details, array($time-60*10));
+			
 			if (DB::isError($r)) 
 				die(print_r($r, 1));
 			$r->fetchInto($row, DB_FETCHMODE_ASSOC);
@@ -291,7 +310,7 @@ switch ($_REQUEST['action']) {
 				$gid   = $row['id'];
 
 				// Get all the optional information
-				$optional = $db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now));
+				$optional = $db->db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now));
 
 				print "<h2>{$row['name']}</h2>\n";
 				print "<p>Running on {$row['sertype']} (Version: {$row['server']}) playing {$row['rule']} (Version: {$row['rulever']}) - {$optional['cmt']}</p>\n";

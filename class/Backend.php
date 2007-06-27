@@ -59,7 +59,7 @@ class Backend {
       WHERE
       	optional.lastseen > ? AND optional.key = ?";
 
-    $result = $this->db->getall($sql_optional_servers, array($now, $key) );
+    $result = $this->db->getall($sql_optional_servers, array($now  , $key) );
  if (DB::isError ($result)) {	
 			 die ("Cannot connect: " . $r->getMessage () . "\n");
 			}
@@ -68,7 +68,21 @@ class Backend {
 
     return $result;
   }
-
+	
+  /**
+  * substarct certain value from time - use this when you want to get values before 
+  * set in class constructor
+  * 
+  * value: in secounds
+  * 
+  */	
+  public function substract_from_time($value)
+  {
+  		$this->now = $this->now - $value;
+  }
+  
+  
+	
   public function get_optional($key)
   {
     $sql_optional = "
@@ -131,7 +145,7 @@ class Backend {
       WHERE
       	locations.lastseen > ?";
 
-		  $r = $this->db->getall($sql_number, array($this->now));
+		  $r = $this->db->getall($sql_number, array($this->now ) );
 
 		  	if (DB::isError ($r)) {	
 			 die ("Cannot connect: " . $r->getMessage () . "\n");
