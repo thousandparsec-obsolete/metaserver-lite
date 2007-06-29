@@ -24,10 +24,13 @@ class Backend {
   private $now;
 
 
-	public function __construct($dsn, $now) {	
+	public function __construct($dsn, $now) 
+	{	
 		$this->now = $now;
 		$this->db =& DB::connect ($dsn);
-		if (DB::isError ($this->db)) {
+		
+		if (DB::isError ($this->db)) 
+		{
 			 die ("Cannot connect: " . $this->db->getMessage () . "\n");
 		}
 		
@@ -47,9 +50,10 @@ class Backend {
 			}
 	}
 */
-  public function get_optional_servers($key)
-  {
-    $sql_optional_servers = "
+	public function get_optional_servers($key)
+	{
+	
+		$sql_optional_servers = "
       SELECT
       	count(DISTINCT games.id)
       FROM
@@ -59,14 +63,16 @@ class Backend {
       WHERE
       	optional.lastseen > ? AND optional.key = ?";
 
-    $result = $this->db->getall($sql_optional_servers, array($now  , $key) );
- if (DB::isError ($result)) {	
-			 die ("Cannot connect: " . $r->getMessage () . "\n");
-			}
-   	if (is_null($result[0][0]))
-			$result[0][0] = 0;
+		$r = $this->db->getall($sql_optional_servers, array($now  , $key) );
+    
+ 		if (DB::isError ($r)) 
+		{	
+			die ("error: " . $r->getMessage () . "\n");
+		}	
+   	if (is_null($r[0][0]))
+			$r[0][0] = 0;
 
-    return $result;
+		return $r;
   }
 	
   /**
@@ -85,28 +91,29 @@ class Backend {
 	
   public function get_optional($key)
   {
-    $sql_optional = "
-      SELECT
+	$sql_optional = "SELECT
       	SUM(value)
       FROM
       	optional
       WHERE
       	lastseen > ? AND `key` = ?";
 
-    $r = $this->db->getall($sql_optional, array($key));
+    	$r = $this->db->getall($sql_optional, array($key));
 
    
-    if (DB::isError ($result)) {	
-			 die ("Cannot connect: " . $r->getMessage () . "\n");
-			}
-    if (is_null($result[0][0]))
-			$result[0][0] = 0;
+    	if (DB::isError ($r)) 
+		{	
+			die ("error: " . $r->getMessage () . "\n");
+		}	
+		
+    	if (is_null($r[0][0]))
+			$r[0][0] = 0;
 
-    return $result;
-  }
+   	return $r;
+	}
 
 	public function game_details($gid)
-  {
+	{
     $sql_details = "
       SELECT
       	games.id, name, tp, server, sertype, rule, rulever,
@@ -119,13 +126,16 @@ class Backend {
       	locations.lastseen > ?
       ORDER BY
       	games.id";
-	$r = $this->db->getall($sql_details, array($this->now));
+      	
+      	
+		$r = $this->db->getall($sql_details, array($this->now));
 
-		  	if (DB::isError ($r)) {	
-			 die ("Cannot connect: " . $r->getMessage () . "\n");
-			}
+		if (DB::isError ($r)) 
+		{	
+			die ("error: " . $r->getMessage () . "\n");
+		}	
 
-		  
+		
 		  return $r;
 
 	}
@@ -133,38 +143,49 @@ class Backend {
   /*
 	 * Returns the number of games currently avalible.
 	 */
-	public function games_number() {
+	public function games_number() 
+	{
+		$sql_number = "SELECT count(DISTINCT games.id)
+	      FROM
+	         games
+	      JOIN
+	         locations ON games.id = locations.gid
+	      WHERE
+	         locations.lastseen > ?";
 
-		$sql_number = "
-      SELECT
-      	count(DISTINCT games.id)
-      FROM
-      	games
-      JOIN
-      	locations ON games.id = locations.gid
-      WHERE
-      	locations.lastseen > ?";
+		$r = $this->db->getall($sql_number, array($this->now ) );
 
-		  $r = $this->db->getall($sql_number, array($this->now ) );
-
-		  	if (DB::isError ($r)) {	
-			 die ("Cannot connect: " . $r->getMessage () . "\n");
-			}
+		if (DB::isError ($r)) 
+		{	
+			die ("error: " . $r->getMessage () . "\n");
+		}	
 
 		  
-		  return $r[0][0];
-
-
+		return $r[0][0];
 	}
+	
+	
 	public function get_id( $name )
 	{
-			$r = $this->db->getall("SELECT `id` FROM games WHERE name = ?", array($name) );
+		$r = $this->db->getall("SELECT `id` FROM games WHERE name = ?", array($name) );
 			
-				if (DB::isError ($r)) {	
+		if (DB::isError ($r)) 
+		{	
 			 die ("error: " . $r->getMessage () . "\n");
-			}	
+		}	
 		return $r[0][0];
 	
+	}
+	
+	public function get_key($param)
+	{
+	
+		$result = $this->db->getall("SELECT `key` FROM games WHERE name = ?", array($param ));
+		if (DB::isError ($result)) 
+		{	
+			 die ("error: " . $result->getMessage () . "\n");
+		}	
+		return $result;
 	}
 	
 	public function replace_location($gid, $type, $host, $addr,  $location)
@@ -172,27 +193,46 @@ class Backend {
 		$r = $this->db->query("REPLACE INTO locations (gid, `type`, host, ip, port, lastseen) VALUES (?, ?, ?, ?, ?, ?)",
 							array($gid, $type, $host, $addr, $location, $this->now));
 		
-			if (DB::isError ($r)) {	
+		if (DB::isError ($r)) 
+		{	
 			 die ("error: " . $r->getMessage () . "\n");
-			}	
+		}	
 		
 		
 	}
 	
-	public function get_key($param)
+	public function replace_optional($gid, $option, $option )
 	{
-	
-		$result = $this->db->getall("SELECT `key` FROM games WHERE name = ?", array($param ));
-		return $result;
+		$r = $this->db->query("REPLACE INTO optional (gid, `key`, value, lastseen) VALUES (?, ?, ?, ?)",
+							array($gid, $option, $option, $this->now) );
+			
+		if (DB::isError ($r)) 
+		{	
+			 die ("error: " . $r->getMessage () . "\n");
+		}	
 	}
+	
+	public function insert_optional($gid, $option, $r_option )
+	{
+		$r = $this->db->query("INSERT INTO optional (gid, `key`, value, lastseen) VALUES (?, ?, ?, ?)",
+							array($gid, $option, $r_option, $this->now) );
+			
+		if (DB::isError ($r)) 
+		{	
+			 die ("error: " . $r->getMessage () . "\n");
+		}	
+		
+	}
+	
 	
 	public function update_games($time, $tp, $server, $sertype, $rule, $rulever, $name_param)
 	{
 		$r = $db->query("UPDATE games SET lastseen=?, tp=?, server=?, sertype=?, rule=?, rulever=? WHERE name=?", array(
 							$time, $tp, $server, $sertype, $rule, $rulever, $name_param ) );
-		if (DB::isError ($r)) {	
-			 die ("Cannot connect: " . $r->getMessage () . "\n");
-			}					
+		if (DB::isError ($r)) 
+		{	
+			 die ("error: " . $r->getMessage () . "\n");
+		}				
 		return $r;
 	
 	}
@@ -201,29 +241,31 @@ class Backend {
 	{
 		$r = $db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", array(
 							$name_param,	$key, $time, $tp, $server, $sertype, $rule, $rulever ));
-			 if (DB::isError ($r)) {		
-			 die ("Cannot connect: " . $r->getMessage () . "\n");
-			}			
-			return $r;
+		if (DB::isError ($r)) 
+		{	
+			 die ("error: " . $r->getMessage () . "\n");
+		}			
+		return $r;
 	}
+	
+	
 	public function update($tp, $server, $sertype, $rule, $rulever, $name)
 	{
 		$r = $this->db->query("UPDATE games SET lastseen=?, tp=?, server=?, sertype=?, rule=?, rulever=? WHERE name=?", array(
 							$this->now, $tp, $server, $sertype, $rule, $rulever, $name));
-  		if (DB::isError ($r)) {		
-			 die ("Cannot connect: " . $r->getMessage () . "\n");
-			}			
+  		if (DB::isError ($r)) 
+		{	
+			 die ("error: " . $r->getMessage () . "\n");
+		}	
 	}
 	
 	public function insert($name,	$key, $tp, $server, $sertype, $rule,   $rulever)
 	{
-			$r = $this->db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", array(
-							$name,	$key,
-							$this->now, 
-						   $tp, $server, $sertype, $rule,   $rulever));
-		if (DB::isError ($r)) {		
-			 die ("Cannot connect: " . $r->getMessage () . "\n");
-			}	
+		$r = $this->db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 									array($name, $key, $this->now, $tp, $server, $sertype, $rule,   $rulever));
+		if (DB::isError ($r)) 
+		{	
+			 die ("error: " . $r->getMessage () . "\n");
+		}	
 	}
 	
 	
@@ -273,9 +315,10 @@ class Backend {
 		
 		");
 	
-	  if (DB::isError ($r)) {	
+	  if (DB::isError ($r)) 
+		{	
 			 die ("error: " . $r->getMessage () . "\n");
-			}
+		}	
 	
 	}
 	
