@@ -121,14 +121,19 @@ switch ($_REQUEST['action']) {
 			$r = $db->replace_location($gid, $type, $host, join($addr, '.'), $location['port'] );
 			
 		}
-
+		echo "b";
 		// Update the optional properties
 		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
+		
 		foreach ($optional as $option) {
 			if (!array_key_exists($option, $_REQUEST))
+			{
+				echo "$option<br />";
 				continue;
-			$r = $db->query("REPLACE INTO optional (gid, `key`, value, lastseen) VALUES (?, ?, ?, ?)",
-							array($gid, $option, $_REQUEST[$option], $time));
+			}
+			echo "a";
+			$db->insert_optional($gid, $option, $_REQUEST[$option] );
+			
 		}
 
 		break;
@@ -151,7 +156,7 @@ switch ($_REQUEST['action']) {
       JOIN
       	locations ON games.id = locations.gid
       WHERE
-      	locations.lastseen > ?
+      	games.lastseen > ?
       ORDER BY
       	games.id";
 		$r =& $db->db->query( $sql_details, array($now) );
@@ -269,6 +274,7 @@ switch ($_REQUEST['action']) {
 		<td><?php if ($objects_servers[0][0] > 0) echo $objects[0][0]/$objects_servers[0][0];  ?></td>
 	</tr>
 </table>
+<br /><br /><a href="stat.php">more statistics...</a><br />
 </div>
 <?php include "bits/end_section.inc"; ?> 
 </div>
@@ -310,8 +316,18 @@ switch ($_REQUEST['action']) {
 				$gid   = $row['id'];
 
 				// Get all the optional information
-				$optional = $db->db->getAssoc("SELECT `key`, value FROM optional WHERE gid=? AND lastseen > ?", false, array($gid, $now));
-
+				$optional = $db->db->getAssoc("
+					SELECT optional.key, optional.value 
+					FROM optional 
+					JOIN games ON games.id = optional.gid
+					AND games.lastseen = optional.update_time
+					WHERE optional.gid=? AND games.lastseen > ?", false, array($gid, $now));
+				
+					if (DB::isError ($optional)) 
+					{	
+		  				die ("error: " . $optional->getMessage () . "\n");
+					}	
+				
 				print "<h2>{$row['name']}</h2>\n";
 				print "<p>Running on {$row['sertype']} (Version: {$row['server']}) playing {$row['rule']} (Version: {$row['rulever']}) - {$optional['cmt']}</p>\n";
 
@@ -361,9 +377,11 @@ switch ($_REQUEST['action']) {
 				} while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
 				print "</ul></p>";
 			}
+		
 			include "bits/end_section.inc";
 		}
-
+		
+			
 		print "</div>";
 		include "bits/end_page.inc";
 		break;

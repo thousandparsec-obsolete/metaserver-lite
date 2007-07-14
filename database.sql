@@ -60,8 +60,7 @@ CREATE TABLE `optional` (
   `gid` bigint(20) NOT NULL,
   `key` varchar(10) NOT NULL,
   `value` varchar(255) NOT NULL,
-  `lastseen` bigint(20) NOT NULL,
-  PRIMARY KEY  (`gid`,`key`)
+  `update_time` bigint(20) NOT NULL,
 ) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -72,4 +71,3 @@ CREATE TABLE `optional` (
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
-
