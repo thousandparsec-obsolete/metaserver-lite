@@ -92,7 +92,7 @@ class Statistics {
 		else if ($this->date_type == 2)
 		{
 			$date = getdate(mktime (0, 0, 0, 1, $key));
-			return $date['mday']."(".$date['weekday'].")";
+			return $date['mday'];
 		}
 		else if ($this->date_type == 3)
 		{

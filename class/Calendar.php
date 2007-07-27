@@ -74,7 +74,7 @@
 					for($i = 0 ; $i<7 && $now <= $day_count; $i++)
 					{
 						$return.="<td>";
-							if ($mark == $now)
+						   if ($mark == $now)
 							{
 								$return.="<b>".$now."</b>";
 							}

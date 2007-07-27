@@ -6,9 +6,10 @@
 	require_once "class/Statistics.php";
 	require_once "class/Calendar.php";
 	require_once "class/Charts.php";
+	require_once "class/SwfCharts.php";
 	require_once 'Image/Graph.php';
 	require_once 'Image/Canvas.php'; 
-
+	include_once 'class/ofc-library/open_flash_chart_object.php';
 	/**
 
 	inserting some test data
@@ -193,6 +194,28 @@
 
 		<a href=\"stat.php?graph=2&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
 								change to graph
+							</a> |
+				<a href=\"stat.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+								change to flash
+							</a>
+		</div>";
+	}
+	else if ($graph == 3)
+	{
+		echo "<div style=\"text-align:center;margin-right:30px;\">";
+		"<br /><br />";
+//		$link = "statswf.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid;
+		$link = "data.txt";
+		SwfCharts::drawPlotChart($data, 2);
+		open_flash_chart_object( 700, 600,  $link );
+
+		echo "
+		<br /><br />
+<a href=\"stat.php?graph=2&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+								change to graph
+							</a> |
+		<a href=\"stat.php?graph=1&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+								change to table
 							</a>
 		</div>";
 	}
@@ -206,6 +229,9 @@
 
 		<a href=\"stat.php?graph=1&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
 								change to table
+							</a> |
+		<a href=\"stat.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+								change to flash
 							</a>
 		</div>";
 	}
