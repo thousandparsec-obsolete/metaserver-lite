@@ -6,6 +6,7 @@
 		
 		public static function draw($year, $month, $type, $link = "", $mark = 0)
 		{
+			
 				$first_day = mktime(0,0,0,$month, 1, $year);
 				$last_day = mktime(23,59,59,$month+1, 0, $year);
 				

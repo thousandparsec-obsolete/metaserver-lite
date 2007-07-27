@@ -97,7 +97,7 @@
 		<div class="stats">
 	<?
 		
-		echo Calendar::draw($year,$month,"stat.php?graph=".$graph."&agr=".$agr."&opt=".$opt."&gid=".$gid, $day);
+		echo Calendar::draw($year,$month,$type,"stat.php?graph=".$graph."&agr=".$agr."&opt=".$opt."&gid=".$gid, $day);
 		
 		echo "<br />agregate functions:<br /><br />
 				<table width=\"200px\">
@@ -207,7 +207,7 @@
 //		$link = "statswf.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid;
 		$link = "data.txt";
 		SwfCharts::drawPlotChart($data, 2);
-		open_flash_chart_object( 700, 600,  $link );
+		open_flash_chart_object( 450, 400,  $link );
 
 		echo "
 		<br /><br />
