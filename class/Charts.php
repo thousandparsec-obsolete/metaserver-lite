@@ -19,25 +19,51 @@ class Charts {
 	
 	public static function drawPlotChart($data, $stat_type) 
 	{
-		$canvas =& Image_Canvas::factory('png', array('width' => 700, 'height' => 600, 'antialias' => true)); 
+	
+		$canvas =& Image_Canvas::factory('png', array('width' => 400, 'height' => 400, 'antialias' => true)); 
 		$graph =& Image_Graph::factory('graph', $canvas);
 		
 		//$font =& $graph->addNew('font', 'Verdana');     				
 		//$font->setSize(9);
 		//$graph->setFont($font);
 		
-		$plotarea =& $graph->addNew('plotarea');
+		$graph->add(
+    		Image_Graph::vertical(
+				Image_Graph::vertical(
+					Image_Graph::factory('title', array('Statistics', 12)),
+					Image_Graph::factory('title', array('additional data', 8)),
+					80
+				),
+				Image_Graph::vertical(
+					$plotarea = Image_Graph::factory('plotarea'),
+					$legend = Image_Graph::factory('legend'),
+					85
+				),
+			9)
+		); 
+		
 
+		$gridY =& $plotarea->addNew('line_grid', null, IMAGE_GRAPH_AXIS_Y); 
+		$gridY->setLineColor('gray@0.1'); 
+		$gridX =& $plotarea->addNew('line_grid', null, IMAGE_GRAPH_AXIS_X);
+		$gridX->setLineColor('lightgray@0.1');  
+
+		$axisX =& $plotarea->getAxis(IMAGE_GRAPH_AXIS_X);
+		$axisX->setFontAngle('vertical'); 
+		
 		if ($stat_type == 1)
 		{
 			$dataset =& Image_Graph::factory('dataset'); 
 			foreach ($data as $key=>$value)
 			{
-				$dataset->addPoint($key,$value);
+				$dataset->addPoint($key."  ",$value);
+				
+				 
 			}
 			
 			$plot =& $plotarea->addNew('line', array(&$dataset)); 
-			$plot->setLineColor('yellow'); 
+			
+			$plot->setLineColor('blue'); 
 		}
 		else if($stat_type == 2)
 		{
@@ -60,6 +86,8 @@ class Charts {
 			$plot2->setLineColor('yellow'); 
 			$plot3->setLineColor('blue'); 
 			
+			
+			
 		}
 		else die("wrong parameter");
 		echo $graph->done(
@@ -69,6 +97,7 @@ class Charts {
          'urlpath' => 'images/' 
 			)
 		);
+	 
 		
 	}
 	

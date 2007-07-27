@@ -223,7 +223,7 @@
 	{
 		echo "<div style=\"text-align:center;margin-right:30px;\">";
 		"<br /><br />";
-		Charts::drawPlotChart($data, 2);
+		Charts::drawPlotChart($data, 1);
 		echo "
 		<br /><br />
 
