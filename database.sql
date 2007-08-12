@@ -30,6 +30,7 @@ CREATE TABLE `games` (
   `sertype` tinyblob NOT NULL,
   `rule` tinyblob NOT NULL,
   `rulever` tinyblob NOT NULL,
+  `firstseen` bigint(20) NOT NULL,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;

@@ -266,7 +266,7 @@ class Backend {
 	
 	public function insert($name,	$key, $tp, $server, $sertype, $rule,   $rulever)
 	{
-		$r = $this->db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 									array($name, $key, $this->now, $tp, $server, $sertype, $rule,   $rulever));
+		$r = $this->db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever, firstseen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 									array($name, $key, $this->now, $tp, $server, $sertype, $rule,   $rulever, $this->now ));
 		if (DB::isError ($r)) 
 		{	
 			 die ("error: " . $r->getMessage () . "\n");
@@ -371,59 +371,7 @@ class Backend {
 	
 	}
 	
-	
-	public function create_database()
-	{	
-		$r = $this->db->query("
-
-
-DROP TABLE IF EXISTS `games`;
-CREATE TABLE `games` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL,
-  `key` tinyblob NOT NULL,
-  `lastseen` bigint(20) NOT NULL,
-  `tp` tinyblob NOT NULL,
-  `server` tinyblob NOT NULL,
-  `sertype` tinyblob NOT NULL,
-  `rule` tinyblob NOT NULL,
-  `rulever` tinyblob NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `name` (`name`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
-
-
-
-DROP TABLE IF EXISTS `locations`;
-CREATE TABLE `locations` (
-  `id` bigint(20) NOT NULL auto_increment,
-  `gid` bigint(20) NOT NULL,
-  `type` varchar(10) NOT NULL,
-  `host` varchar(255) NOT NULL,
-  `ip` varchar(255) NOT NULL,
-  `port` int(11) NOT NULL,
-  `lastseen` bigint(20) NOT NULL,
-  PRIMARY KEY  (`id`),
-  UNIQUE KEY `location` (`gid`,`type`,`ip`,`port`)
-) ENGINE=MyISAM AUTO_INCREMENT=426 DEFAULT CHARSET=latin1;
-
-
-DROP TABLE IF EXISTS `optional`;
-CREATE TABLE `optional` (
-  `gid` bigint(20) NOT NULL,
-  `key` varchar(10) NOT NULL,
-  `value` varchar(255) NOT NULL,
-  `update_time` bigint(20) NOT NULL
-) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
-		
-		");
-	
-	  if (DB::isError ($r)) 
-		{	
-			 die ("error: " . $r->getMessage () . "\n");
-		}	
-	
-	}
+ 
 	
 
 }
