@@ -39,7 +39,27 @@ class BackConnect
 	}
 	
 	public function get_games()
-	{}
+	{
+		echo "<br />GETGAMES Frame:<br />";
+		$f = new Frame(Frame::GETGAMES, 1, array());
+	   $message = $f->pack();
+	   echo "<br />message:".$message."<br />";
+	   $this->game_connect->sendMessage($message);
+	   //16 bits header frame
+	   $res = $this->game_connect->getMessage(16);
+	   echo "header rec:<br />";
+	   print_r($f);
+	   $f->parse_header($res);
+	   echo "<br />frame :<br />";
+	   print_r($f);
+	   $res = $this->game_connect->getMessage($f->length);
+	   echo "<br />res:<br />";
+	   echo $res;
+	   $f->parse_data($res);
+	   echo "<br />frame:<br />";
+	   print_r($f);
+	
+	}
 	
 	
 
