@@ -2,7 +2,7 @@
 
 /*change path later!!!!*/
 
-include('Frame.php');
+//include('Frame.php');
 
 
 
@@ -10,6 +10,7 @@ include('Frame.php');
 class BackConnect
 {
 	private $game_connect;
+	private $frame;
 	
 	public function __construct($host, $port)
 	{
@@ -29,39 +30,44 @@ class BackConnect
 	   $this->game_connect->sendMessage($message);
 	   //16 bits header frame
 	   $res = $this->game_connect->getMessage(16);
-	   print_r($f);
+	   
 	   $f->parse_header($res);
-	   print_r($f);
+	   
 	   $res = $this->game_connect->getMessage($f->length);
-	   echo $res;
+	   
 	   $f->parse_data($res);
-	   print_r($f);
+	   
 	}
 	
 	public function get_games()
 	{
-		echo "<br />GETGAMES Frame:<br />";
-		$f = new Frame(Frame::GETGAMES, 1, array());
-	   $message = $f->pack();
-	   echo "<br />message:".$message."<br />";
+		$this->frame = new Frame(Frame::GETGAMES, 1, array());
+	   $message = $this->frame->pack();
+	   
+	   
 	   $this->game_connect->sendMessage($message);
-	   //16 bits header frame
 	   $res = $this->game_connect->getMessage(16);
-	   echo "header rec:<br />";
-	   print_r($f);
-	   $f->parse_header($res);
-	   echo "<br />frame :<br />";
-	   print_r($f);
-	   $res = $this->game_connect->getMessage($f->length);
-	   echo "<br />res:<br />";
-	   echo $res;
-	   $f->parse_data($res);
-	   echo "<br />frame:<br />";
-	   print_r($f);
+	   
+	   $this->frame->parse_header($res);
+	   $res = $this->game_connect->getMessage($this->frame->length);
+	   
+	   $this->frame->parse_data($res);
+
 	
 	}
 	
+	public function disconnect()
+	{
+		$this->game_connect->disconnect();
+	}
 	
+	/**
+		@todo - add frame formating
+	*/
+	public function writeFrame()
+	{
+		print_r($this->frame);
+	}
 
 }
 
