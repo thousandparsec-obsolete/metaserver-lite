@@ -3,17 +3,35 @@
 
 require_once "class/GameConnect.php";
 require_once "class/BackConnect.php";
+
 //put this in different file !!!!
-require_once "class/Frame.php";
+include("class/Frame.php");
 
 
-$bc = new BackConnect('121.72.134.109', 6923);
+function getData($host, $port, $quiet=0 )
+{
+	($host != '' && $port != '' ) or die ('wrong parameters');
+		
+	try 
+	{
+		$bc = new BackConnect('203.122.246.117', 6923);
 
-$bc->connect();
+	   $bc->connect();
+	   $bc->get_games();
+	   $bc->disconnect();
+	} catch (Exception $e) 
+	{
+		$bc->disconnect();
+	   echo 'Caught exception: ',  $e->getMessage(), "\n";
+	}
+	if ($mode == 0)
+	{
+		//write frame
+		$bc->writeFrame();
+	}
+}
 
-
-
-
+getData($_GET['host'], $_GET['port'], $_REQUIRE['quiet'] );
 
 
 ?>
