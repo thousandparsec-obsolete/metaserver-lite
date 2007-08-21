@@ -26,44 +26,19 @@ $db = new Backend($dsn, $time);
 switch ($_REQUEST['action']) {
 	case 'update':
 		// Check all the required properties exist in the request
+		
+		
 		$required = array('name', 'tp', 'server', 'sertype', 'rule', 'rulever');
 		foreach ($required as $r)
 			if (!array_key_exists($r, $_REQUEST))
 				die("Required key $r doesn't exist!");
-
+		//include ("connect.php?")
 		print "<pre>";
 		var_dump($_REQUEST);
 		print "</pre>";
-		$result = $db->get_key( $_REQUEST['name'] );
-		if (sizeof($result) > 0) {
-			if (strcmp($result[0][0], $_REQUEST['key']) !== 0)
-				die ("Key was not valid...");
-
-			// Update the required values
-			$r = $db->update($_REQUEST['tp'], 
-							$_REQUEST['server'], $_REQUEST['sertype'], 
-							$_REQUEST['rule'],   $_REQUEST['rulever'],
-							$_REQUEST['name']);
-		} else {
-			$r = $db->insert(
-							$_REQUEST['name'],	$_REQUEST['key'], 
-							$_REQUEST['tp'], 
-							$_REQUEST['server'], $_REQUEST['sertype'], 
-							$_REQUEST['rule'],   $_REQUEST['rulever']);
-		}
-		if (DB::isError($r)) 
-			die(print_r($r, 1));
-
-		// Get the ID
-		$gid = $db->get_id( $_REQUEST['name'] );
-	
 		
-
-		 
+		
 		// Find the location details
-		
-		
-		
 		$location_values = array('type', 'dns', 'ip', 'port');
 		$locations = array();
 		while (1) {
@@ -81,6 +56,46 @@ switch ($_REQUEST['action']) {
 				break;
 		}
 
+		
+		include("connect_.php");
+		
+		
+		
+		
+		
+		$result = $db->getKey( $_REQUEST['name'] );
+		if (sizeof($result) > 0) {
+			if (strcmp($result[0][0], $_REQUEST['key']) !== 0)
+				die ("Key was not valid...");
+
+			// Update the required values
+			$r = $db->update($_REQUEST['tp'], 
+							$_REQUEST['server'], $_REQUEST['sertype'], 
+							$_REQUEST['rule'],   $_REQUEST['rulever'],
+							$_REQUEST['name']);
+		} else {
+			$r = $db->insert(
+							$_REQUEST['name'],	$_REQUEST['key'], 
+							$_REQUEST['tp'], 
+							$_REQUEST['server'], $_REQUEST['sertype'], 
+							$_REQUEST['rule'],   $_REQUEST['rulever']);
+		}
+		
+		
+		
+		if (DB::isError($r)) 
+			die(print_r($r, 1));
+
+		// Get the ID
+		$gid = $db->getId( $_REQUEST['name'] );
+	
+		
+
+		 
+		
+		
+		
+		
 		// Validate the location stuff
 		foreach ($locations as $location) {
 			// Validate/format the data
@@ -118,21 +133,20 @@ switch ($_REQUEST['action']) {
 			// Add or update this location
 			
 			
-			$r = $db->replace_location($gid, $type, $host, join($addr, '.'), $location['port'] );
+			$r = $db->replaceLocation($gid, $type, $host, join($addr, '.'), $location['port'] );
 			
 		}
-		echo "b";
+
 		// Update the optional properties
 		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
 		
 		foreach ($optional as $option) {
 			if (!array_key_exists($option, $_REQUEST))
 			{
-				echo "$option<br />";
 				continue;
 			}
-			echo "a";
-			$db->insert_optional($gid, $option, $_REQUEST[$option] );
+
+			$db->insertOptional($gid, $option, $_REQUEST[$option] );
 			
 		}
 
@@ -142,7 +156,7 @@ switch ($_REQUEST['action']) {
 		$now = time()-60*10;
 		
 		
-		$r = $db->games_number();
+		$r = $db->gamesNumber();
 		
 		
 		//$seq = new Frame(Frame::SEQUENCE, 1, array('no' => $r));
@@ -218,35 +232,35 @@ switch ($_REQUEST['action']) {
 		$title = "Metaserver Server Listing";
 		include "bits/start_page.inc";
 		
-		$db->substract_from_time(60*10);
+		$db->substractFromTime(60*10);
 
 
 		// Get all the statistics
-		$servers = $db->games_number();
+		$servers = $db->gamesNumber();
 		
 		$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
 
-		$players = $db->get_optional('plys');
+		$players = $db->getOptional('plys');
 		
 		if (is_null($players[0][0]))
 			$players[0][0] = 0;
 			
-		$players_servers = $db->get_optional_servers('plys');
+		$players_servers = $db->getOptionalServers('plys');
 		
 		
-		$connect = $db->get_optional('cons');
+		$connect = $db->getOptional('cons');
 		
 		if (is_null($connect[0][0]))
 			$connect[0][0] = 0;
-		$connect_servers = $db->get_optional_servers('cons');
+		$connect_servers = $db->getOptionalServers('cons');
 		
 
-		$objects = $db->get_optional('objs');
+		$objects = $db->getOptional('objs');
 		
 		
 		if (is_null($objects[0][0]))
 			$objects[0][0] = 0;
-		$objects_servers = $db->get_optional_servers('objs');
+		$objects_servers = $db->getOptionalServers('objs');
 ?>
 
 <div id="right" style="width: 300px;">
