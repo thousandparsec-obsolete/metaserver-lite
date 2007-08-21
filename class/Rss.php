@@ -9,6 +9,13 @@
 
 class RSS {
 
+
+	/**
+	create RSS feed
+	
+	@param link - link to main metaserver site
+	
+	*/
 	public static function createRss($link)
 	{
 		

@@ -16,7 +16,15 @@ class Charts {
 	 
 
 
+	/**
+	draw graph using  image_graph from pear library
 	
+	@param data      - data from 
+	@param stat_type - stat type, not used now.
+	
+	
+	
+	*/
 	public static function drawPlotChart($data, $stat_type) 
 	{
 	

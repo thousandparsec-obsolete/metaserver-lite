@@ -3,7 +3,17 @@
 
 	class Calendar {
 
+		/**
 		
+		draw calendar in form of table for given year/month, and also mark selected day
+		
+		@param year  - year
+		@param month - month
+		@param type  - 
+		@param link  - link added to all days/month/year to remember all variables
+		@param mark  - selected day isn't link - to show whith day we selected
+		
+		*/
 		public static function draw($year, $month, $type, $link = "", $mark = 0)
 		{
 			

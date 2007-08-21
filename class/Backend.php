@@ -8,22 +8,15 @@
  *
  */
 
-/**
- * @TODO:
- *  - add some error handling functions
- *  - TEST it and insert into index.php
- *  - function comment
- *
- *
- */
-
 class Backend {
 
-	// in future: chenge tu private - now it;s public becouse of one query
+/**
+	@TODO change to private 
+*/
   public $db;
   private $now;
 
-
+	
 	public function __construct($dsn, $now) 
 	{	
 		$this->now = $now;
@@ -37,20 +30,14 @@ class Backend {
 	}
 
 
-	/*
-
+	/**
+		return number of games having this same optional parameter 
+		
+		@param key optional parameter key
+		@return number of games
+		
 	 */
-/*	public function games() {
-		class games_iter {
-			public function __construct($db) {
-				$this->res =
-			}
-
-			public function fetchInto(&$row) {
-			}
-	}
-*/
-	public function get_optional_servers($key)
+	public function getOptionalServers($key)
 	{
 	
 		$sql_optional_servers = "
@@ -79,26 +66,26 @@ class Backend {
   * substarct certain value from time - use this when you want to get values before 
   * set in class constructor
   * 
-  * value: in secounds
+  * @param value number of secound you wanted to substract from time
   * 
   */	
-  public function substract_from_time($value)
+  public function substractFromTime($value)
   {
   		$this->now = $this->now - $value;
   }
   
   
-	/**
-	@TODO: talk to mithro: could be there update to server more then 
-	
+	/**	
+		@param optional key
+		@return sum of for all games for given optional parameter
 	*/
-  public function get_optional($key)
+  public function getOptional($key)
   {
 	$sql_optional = "SELECT SUM( value )
 				FROM optional
 				JOIN games ON games.id = optional.gid
 				AND games.lastseen = optional.update_time
-      	WHERE games.lastseen > ? AND optional.key = ?";
+      		WHERE games.lastseen > ? AND optional.key = ?";
 
     	$r = $this->db->getall($sql_optional, array($this->now , $key) );
 		
@@ -113,8 +100,12 @@ class Backend {
 
    	return $r;
 	}
-
-	public function game_details($gid)
+	/**
+	
+	@param gid game id
+	@return all information for given game 
+	*/
+	public function gameDetails($gid)
 	{
     $sql_details = "
       SELECT
@@ -142,10 +133,10 @@ class Backend {
 
 	}
 
-  /*
-	 * Returns the number of games currently avalible.
+  /**
+	 * @return Returns the number of games currently avalible
 	 */
-	public function games_number() 
+	public function gamesNumber() 
 	{
 		$sql_number = "SELECT count(DISTINCT games.id)
 	      FROM
@@ -166,8 +157,12 @@ class Backend {
 		return $r[0][0];
 	}
 	
-	
-	public function get_id( $name )
+	/**
+	*
+	* @param name - game name
+	* @return game id
+	*/
+	public function getId( $name )
 	{
 		$r = $this->db->getall("SELECT `id` FROM games WHERE name = ?", array($name) );
 			
@@ -179,7 +174,11 @@ class Backend {
 	
 	}
 	
-	public function get_key($param)
+	/**
+	* @param para - game name
+	* @return key from games table
+	*/
+	public function getKey($param)
 	{
 	
 		$result = $this->db->getall("SELECT `key` FROM games WHERE name = ?", array($param ));
@@ -190,7 +189,11 @@ class Backend {
 		return $result;
 	}
 	
-	public function replace_location($gid, $type, $host, $addr,  $location)
+	/**
+	insert into locations table
+	
+	*/
+	public function replaceLocation($gid, $type, $host, $addr,  $location)
 	{
 		$r = $this->db->query("REPLACE INTO locations (gid, `type`, host, ip, port, lastseen) VALUES (?, ?, ?, ?, ?, ?)",
 							array($gid, $type, $host, $addr, $location, $this->now));
@@ -203,21 +206,14 @@ class Backend {
 		
 	}
 	
-  /*
-   this comment is to make sure I dont use update just insert - we want to insert new data every time 
+   /**
+   insert into optional table
    
-  	public function replace_optional($gid, $option, $option )
-	{
-		$r = $this->db->query("REPLACE INTO optional (gid, `key`, value, update_time) VALUES (?, ?, ?, ?)",
-							array($gid, $option, $option, $this->now) );
-			
-		if (DB::isError ($r)) 
-		{	
-			 die ("error: " . $r->getMessage () . "\n");
-		}	
-	}*/
-	
-	public function insert_optional($gid, $option, $r_option )
+   @param gid    -game id
+   @param option - option key name
+   @param r_option - option key value
+   */
+	public function insertOptional($gid, $option, $r_option )
 	{
 		$r = $this->db->query("INSERT INTO optional (gid, `key`, value, update_time) VALUES (?, ?, ?, ?)",
 							array($gid, $option, $r_option, $this->now) );
@@ -228,32 +224,11 @@ class Backend {
 		}	
 		
 	}
+  
 	
-	
-	public function update_games($time, $tp, $server, $sertype, $rule, $rulever, $name_param)
-	{
-		$r = $db->query("UPDATE games SET lastseen=?, tp=?, server=?, sertype=?, rule=?, rulever=? WHERE name=?", array(
-							$time, $tp, $server, $sertype, $rule, $rulever, $name_param ) );
-		if (DB::isError ($r)) 
-		{	
-			 die ("error: " . $r->getMessage () . "\n");
-		}				
-		return $r;
-	
-	}
-	
-	public function insert_games($name_param,	$key, $time, $tp, $server, $sertype, $rule, $rulever)
-	{
-		$r = $db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", array(
-							$name_param,	$key, $time, $tp, $server, $sertype, $rule, $rulever ));
-		if (DB::isError ($r)) 
-		{	
-			 die ("error: " . $r->getMessage () . "\n");
-		}			
-		return $r;
-	}
-	
-	
+	/**
+	update Games table
+	*/
 	public function update($tp, $server, $sertype, $rule, $rulever, $name)
 	{
 		$r = $this->db->query("UPDATE games SET lastseen=?, tp=?, server=?, sertype=?, rule=?, rulever=? WHERE name=?", array(
@@ -264,6 +239,9 @@ class Backend {
 		}	
 	}
 	
+	/**
+	insert into Games table
+	*/
 	public function insert($name,	$key, $tp, $server, $sertype, $rule,   $rulever)
 	{
 		$r = $this->db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever, firstseen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 									array($name, $key, $this->now, $tp, $server, $sertype, $rule,   $rulever, $this->now ));
@@ -279,6 +257,13 @@ class Backend {
 		for all dates != 0 it return statistics for every hour 
 		for if day==0 it return statistic for all day in  month
 		for month == 0 & day == 0 it returns statistics for every month (sum of all statistics)
+		
+		@param key   - key from optional talbe for which we want our statitics
+		@param year  - year in XXXX format
+		@param month - month
+		@param day   - day
+		@param type  - max, avg or nin - type of stats
+		@param gid   - optional, game for whitch we want our statictics
 		
 	*/
 	public function getStatisticFromOptional ($key,  $year, $month, $day, $type, $gid = false)

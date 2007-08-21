@@ -25,6 +25,11 @@ class GameConnect{
 		//echo "connected<br />";
 	}
 	
+	/**
+		get message from socket
+		
+		@param length - lenght of message
+	*/
 	public function getMessage($length)
 	{
 		if ( false === ($msg = socket_read($this->socket, $length)) )
@@ -35,6 +40,12 @@ class GameConnect{
 		return $msg;
 	}
 	
+	
+	/**
+		send message
+		
+		@param message - message
+	*/
 	public function sendMessage($message)
 	{
 		if ( false === (socket_write($this->socket,$message) ))
@@ -44,6 +55,9 @@ class GameConnect{
 		};
 	}
 	
+	/**
+
+	*/
 	public function disconnect()
 	{
 		socket_close($this->socket); 

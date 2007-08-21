@@ -14,8 +14,15 @@
 
 class SwfCharts {
 
+	/**
+	@param data      - data from Statistics class 
+	
 
-	public static function drawPlotChart($data, $stat_type) 
+	
+	*/
+	
+	
+	public static function drawPlotChart($data) 
 	{
 		$tmp = array();
 	   $x_labels = array();

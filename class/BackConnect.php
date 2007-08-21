@@ -20,8 +20,7 @@ class BackConnect
 	
 	
 	/**
-	
-	ADD return values /okey/fail/
+		connect to game
 	*/
 	public function connect()
 	{
@@ -39,6 +38,9 @@ class BackConnect
 	   
 	}
 	
+	/**
+		get all games. data stored in frame
+	*/
 	public function get_games()
 	{
 		$this->frame = new Frame(Frame::GETGAMES, 1, array());
@@ -67,6 +69,11 @@ class BackConnect
 	public function writeFrame()
 	{
 		print_r($this->frame);
+	}
+	
+	public function getFrame()
+	{
+		return $this->frame;
 	}
 
 }

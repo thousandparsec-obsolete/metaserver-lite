@@ -3,10 +3,6 @@
 /**
  *
  *
- * Class Games
- *
- * - to finish
- *	- will contain information about game
  *
  */
 
