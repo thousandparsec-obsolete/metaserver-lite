@@ -167,9 +167,10 @@ switch ($_REQUEST['action']) {
 		
 		//$seq = new Frame(Frame::SEQUENCE, 1, array('no' => $r));
 		//print $seq->pack();
+
 		$sql_details = "
       SELECT
-      	games.id, sn, tp, server, sertype, rule, rulever,
+      	games.id, shortname, tp, server, sertype, rule, rulever,
       	type, host, ip, port, locations.lastseen AS lastseen, ln
       FROM
       	games
@@ -190,6 +191,7 @@ switch ($_REQUEST['action']) {
 
 		
 		$r->fetchInto($row, DB_FETCHMODE_ASSOC);
+
 		while (true) {
 			if (sizeof($row) == 0)
 				break;
@@ -312,8 +314,8 @@ switch ($_REQUEST['action']) {
 			// @TODO: it should be in function !!!
 			$sql_details = "
       SELECT
-      	games.id, sn, tp, server, sertype, rule, rulever,
-      	type, host, ip, port, locations.lastseen AS lastseen, ln
+      	games.id, shortname, tp, server, sertype, rule, rulever,
+      	type, host, ip, port, locations.lastseen AS lastseen, longname
       FROM
       	games
       JOIN
@@ -326,8 +328,10 @@ switch ($_REQUEST['action']) {
       	
 			$r = $db->db->query($sql_details, array($time-60*10));
 			
-			if (DB::isError($r)) 
-				die(print_r($r, 1));
+			if (DB::isError ($r)) {	
+			 die ("Error: " . $r->getMessage () . "\n");
+			}
+
 			$r->fetchInto($row, DB_FETCHMODE_ASSOC);
 			while (true) {
 				if (sizeof($row) == 0)
