@@ -30,7 +30,7 @@ class RSS {
 		
 		$sql_details = "
       SELECT
-      	games.id, name, tp, server, sertype, rule, rulever,
+      	games.id, shortname, tp, server, sertype, rule, rulever,
       	type, host, ip, port, locations.lastseen AS lastseen, firstseen
       FROM
       	games
@@ -81,7 +81,7 @@ class RSS {
 			}	
 			
 			echo '<item>
-						<title>'.$row['name'].'</title> 
+						<title>'.$row['shortname'].'</title> 
 						<link>'.$link.'</link>';
 			echo "<pubDate>".date(DATE_RFC822, $row['firstseen'])."</pubDate>";
 			echo "	<description>
@@ -127,7 +127,7 @@ class RSS {
 						break;
 					}
 
-					echo htmlspecialchars("<a href='{$row['type']}://{$row['host']}:{$row['port']}/".urlencode("{$row['name']}")."'>");
+					echo htmlspecialchars("<a href='{$row['type']}://{$row['host']}:{$row['port']}/".urlencode("{$row['shortname']}")."'>");
 					echo htmlspecialchars($names[$row{'type'}]." to ");
 					echo htmlspecialchars("{$row['host']} ({$row['ip']}:{$row['port']})");
 					echo htmlspecialchars("</a></li>\n");
