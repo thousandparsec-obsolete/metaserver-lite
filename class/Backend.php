@@ -109,7 +109,7 @@ class Backend {
 	{
     $sql_details = "
       SELECT
-      	games.id, name, tp, server, sertype, rule, rulever,
+      	games.id, shortname, tp, server, sertype, rule, rulever,
       	type, host, ip, port, locations.lastseen AS lastseen
       FROM
       	games
@@ -164,7 +164,7 @@ class Backend {
 	*/
 	public function getId( $name )
 	{
-		$r = $this->db->getall("SELECT `id` FROM games WHERE name = ?", array($name) );
+		$r = $this->db->getall("SELECT `id` FROM games WHERE shortname = ?", array($name) );
 			
 		if (DB::isError ($r)) 
 		{	
@@ -181,7 +181,7 @@ class Backend {
 	public function getKey($param)
 	{
 	
-		$result = $this->db->getall("SELECT `key` FROM games WHERE name = ?", array($param ));
+		$result = $this->db->getall("SELECT `key` FROM games WHERE shortname = ?", array($param ));
 		if (DB::isError ($result)) 
 		{	
 			 die ("error: " . $result->getMessage () . "\n");
@@ -229,10 +229,10 @@ class Backend {
 	/**
 	update Games table
 	*/
-	public function update($tp, $server, $sertype, $rule, $rulever, $name)
+	public function update($tp, $server, $sertype, $rule, $rulever, $sn, $ln)
 	{
-		$r = $this->db->query("UPDATE games SET lastseen=?, tp=?, server=?, sertype=?, rule=?, rulever=? WHERE name=?", array(
-							$this->now, $tp, $server, $sertype, $rule, $rulever, $name));
+		$r = $this->db->query("UPDATE games SET lastseen=?, tp=?, server=?, sertype=?, rule=?, rulever=?, longname=? WHERE shortname=?", array(
+							$this->now, $tp, $server, $sertype, $rule, $rulever, $ln, $sn));
   		if (DB::isError ($r)) 
 		{	
 			 die ("error: " . $r->getMessage () . "\n");
@@ -242,9 +242,9 @@ class Backend {
 	/**
 	insert into Games table
 	*/
-	public function insert($name,	$key, $tp, $server, $sertype, $rule,   $rulever)
+	public function insert($sn,	$key, $tp, $server, $sertype, $rule,   $rulever, $ln)
 	{
-		$r = $this->db->query("INSERT INTO games (name, `key`, lastseen, tp, server, sertype, rule, rulever, firstseen) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 									array($name, $key, $this->now, $tp, $server, $sertype, $rule,   $rulever, $this->now ));
+		$r = $this->db->query("INSERT INTO games (shortname, `key`, lastseen, tp, server, sertype, rule, rulever, firstseen, longname) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 									array($sn, $key, $this->now, $tp, $server, $sertype, $rule,   $rulever, $this->now , $ln));
 		if (DB::isError ($r)) 
 		{	
 			 die ("error: " . $r->getMessage () . "\n");
