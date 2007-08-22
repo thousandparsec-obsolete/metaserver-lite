@@ -100,20 +100,20 @@
 		echo Calendar::draw($year,$month,$type,"stat.php?graph=".$graph."&agr=".$agr."&opt=".$opt."&gid=".$gid, $day);
 		
 		echo "<br />agregate functions:<br /><br />
-				<table width=\"200px\">
+				<table width='200px'>
 					<tr>
 						<td>
-							<a href=\"stat.php?graph=".$graph."&agr=max&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+							<a href='stat.php?graph=".$graph."&agr=max&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								max
 							</a>
 						</td>
 						<td>
-							<a href=\"stat.php?graph=".$graph."&agr=avg&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+							<a href='stat.php?graph=".$graph."&agr=avg&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								avg
 							</a>
 						</td>
 						<td>
-							<a href=\"stat.php?graph=".$graph."&agr=min&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+							<a href='stat.php?graph=".$graph."&agr=min&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								min
 							</a>
 						</td>
@@ -126,18 +126,18 @@
 			cons 	2 	number of clients currently connected
 			objs 	3 	number of "objects" in the game universe
 		*/
-			echo "<a href=\"stat.php?graph=".$graph."&agr=".$agr."&opt=plys&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+			echo "<a href='stat.php?graph=".$graph."&agr=".$agr."&opt=plys&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 					number of players in the game
 				</a><br />";
-			echo "<a href=\"stat.php?graph=".$graph."&agr=".$agr."&opt=cons&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+			echo "<a href='stat.php?graph=".$graph."&agr=".$agr."&opt=cons&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 					number of clients currently connected
 				</a><br />";
-			echo "<a href=\"stat.php?graph=".$graph."&agr=".$agr."&opt=objs&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+			echo "<a href='stat.php?graph=".$graph."&agr=".$agr."&opt=objs&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 					number of \"objects\" in the game universe
 				</a><br />";
 				
 		echo "<br />choose server:<br /><br />";
-		echo "<a href=\"stat.php?graph=".$graph."&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=0\">
+		echo "<a href='stat.php?graph=".$graph."&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=0'>
 					all
 				</a><br />";
 	
@@ -160,7 +160,7 @@
 				break;
 
 			
-			echo "<a href=\"stat.php?graph=".$graph."&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$row['id']."\">
+			echo "<a href='stat.php?graph=".$graph."&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$row['id']."'>
 					".$row['name']."
 				</a><br />";
 			$res->fetchInto($row, DB_FETCHMODE_ASSOC);
@@ -179,7 +179,7 @@
 	
 	if ($graph == 1)
 	{
-		echo "<div style=\"text-align:center\">";
+		echo "<div style='text-align:center'>";
 		echo "<br /><br /><br />";
 		if ($type == 1)
 			$par1 = "hour";
@@ -192,17 +192,17 @@
 		echo "
 		<br /><br />
 
-		<a href=\"stat.php?graph=2&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+		<a href='stat.php?graph=2&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								change to graph
 							</a> |
-				<a href=\"stat.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+				<a href='stat.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								change to flash
 							</a>
 		</div>";
 	}
 	else if ($graph == 3)
 	{
-		echo "<div style=\"text-align:center;margin-right:30px;\">";
+		echo "<div style='text-align:center;margin-right:30px;'>";
 		"<br /><br />";
 //		$link = "statswf.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid;
 		$link = "data.txt";
@@ -211,26 +211,26 @@
 
 		echo "
 		<br /><br />
-<a href=\"stat.php?graph=2&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+<a href='stat.php?graph=2&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								change to graph
 							</a> |
-		<a href=\"stat.php?graph=1&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+		<a href='stat.php?graph=1&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								change to table
 							</a>
 		</div>";
 	}
 	else 
 	{
-		echo "<div style=\"text-align:center;margin-right:30px;\">";
+		echo "<div style='text-align:center;margin-right:30px;'>";
 		"<br /><br />";
 		Charts::drawPlotChart($data, 1);
 		echo "
 		<br /><br />
 
-		<a href=\"stat.php?graph=1&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+		<a href='stat.php?graph=1&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								change to table
 							</a> |
-		<a href=\"stat.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."\">
+		<a href='stat.php?graph=3&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$gid."'>
 								change to flash
 							</a>
 		</div>";
