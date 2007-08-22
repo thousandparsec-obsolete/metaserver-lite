@@ -22,7 +22,7 @@
 DROP TABLE IF EXISTS `games`;
 CREATE TABLE `games` (
   `id` bigint(20) NOT NULL auto_increment,
-  `name` varchar(100) NOT NULL,
+  `shortname` varchar(100) NOT NULL,
   `key` tinyblob NOT NULL,
   `lastseen` bigint(20) NOT NULL,
   `tp` tinyblob NOT NULL,
@@ -31,6 +31,7 @@ CREATE TABLE `games` (
   `rule` tinyblob NOT NULL,
   `rulever` tinyblob NOT NULL,
   `firstseen` bigint(20) NOT NULL,
+  `longtname` text,
   PRIMARY KEY  (`id`),
   UNIQUE KEY `name` (`name`)
 ) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
