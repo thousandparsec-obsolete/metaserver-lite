@@ -146,7 +146,7 @@
 		*/
 		$sql_details = "
       SELECT
-      	id, name
+      	id, shortname
       FROM
       	games
       ORDER BY
@@ -161,7 +161,7 @@
 
 			
 			echo "<a href='stat.php?graph=".$graph."&agr=".$agr."&opt=".$opt."&month=".$month."&year=".$year."&day=".$day."&type=".$type."&gid=".$row['id']."'>
-					".$row['name']."
+					".$row['shortname']."
 				</a><br />";
 			$res->fetchInto($row, DB_FETCHMODE_ASSOC);
 			

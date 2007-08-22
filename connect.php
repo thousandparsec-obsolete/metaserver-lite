@@ -17,11 +17,11 @@ connect to server, get all games, and check if data from GET table is same as da
 {
 
    
-	$host = $locations[0]['host'];
+	$host = $locations[0]['dns'];
 	$port = $locations[0]['port'];
 	
 	
-	
+
 	
    ($host != '' && $port != '' ) or die ('wrong parameters');
       
@@ -38,24 +38,29 @@ connect to server, get all games, and check if data from GET table is same as da
       echo 'Caught exception: ',  $e->getMessage(), "\n";
    }
    
-   $f_name = $bc->getFrame->get['name'];
-   $f_key = $bc->getFrame->get['key'];
-   $f_tp = $bc->getFrame->get['tp']; //array
-   $f_server = $bc->getFrame->get['server'];
-   $f_sertype = $bc->getFrame->get['sertype'];
-   $f_rule = $bc->getFrame->get['rule'];
-   $f_rulever = $bc->getFrame->get['rulever'];
-   $f_locations = $bc->getFrame->get['locations']; //array
-   $f_optional = $bc->getFrame->get['optional']; //array
-   $f_URL = $bc->getFrame->get['URL'];
+	$f = $bc->getFrame();
    
-   if ($_REQUEST['name'] != $f_name || $_REQUEST['key'] != $f_key ||
-			$_REQUEST['server'] != $f_server || $_REQUEST['sertype'] != f_sertype || 
+
+
+   
+   $f_name = $f->name;   
+   $f_tp = $f->tp; //array
+   $f_server = $f->server;
+   $f_sertype = $f->sertype;
+   $f_rule = $f->rule;
+   $f_rulever = $f->rulever;
+   $f_locations = $f->locations; //array
+   $f_optional = $f->optional; //array
+
+
+	
+   if ($_REQUEST['sn'] != $f_name || 
+			$_REQUEST['server'] != $f_server || $_REQUEST['sertype'] != $f_sertype || 
 			$_REQUEST['rule'] != $f_rule || $_REQUEST['rulever'] != $f_rulever )
 	{
-		die("wrong values");
+		die("back-connect validation - failed");
 	}
-   
+   /*
    //checking for tp
    if (array_search($_REQUEST['tp'], $f_tp) === NULL)
    	die("wrong values - tp");
@@ -73,7 +78,7 @@ connect to server, get all games, and check if data from GET table is same as da
    			foreach ($f_locations as $f_loc)
    			{
    				
-   				if (array_search($lo_], $f_loc) !== NULL)
+   				if (array_search($lo_, $f_loc) !== NULL)
 				   	$tmp = 1;
    			}
    			if ($tmp = 0)
@@ -91,10 +96,10 @@ connect to server, get all games, and check if data from GET table is same as da
 			$tmp = 0;
 			 foreach ( $f_optional as $f_opt)
 			 {
-			 	$v = array_search($value, $f_opt)
+			 	$v = array_search($value, $f_opt);
 			 	if ($v !== NULL)
 			 	{
-			 		$tmp = 1
+			 		$tmp = 1;
 			 		if (!($f_opt[1] == $_REQUEST['key'] || $f_opt[2] == $_REQUEST['key']  ))
 			 			die("wrong values - opt.: ".$key);
 			 	}
@@ -106,7 +111,7 @@ connect to server, get all games, and check if data from GET table is same as da
 			
 	
    
-	   
+	   */
 	
 }
 	//getData($_GET['host'], $_GET['port'], $_GET['frame'],$_GET['mode'] );

@@ -57,7 +57,7 @@ switch ($_REQUEST['action']) {
 		}
 
 		
-		include("connect_.php");
+		include("connect.php");
 		
 		
 		
@@ -72,16 +72,16 @@ switch ($_REQUEST['action']) {
 			$r = $db->update($_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
 							$_REQUEST['rule'],   $_REQUEST['rulever'],
-							$_REQUEST['sn'], $_REQUEST['ln'], );
+							$_REQUEST['sn'], $_REQUEST['ln'] );
 		} else {
 			$r = $db->insert(
 							$_REQUEST['sn'],	$_REQUEST['key'], 
 							$_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
-							$_REQUEST['rule'],   $_REQUEST['rulever'], $_REQUEST['ln'], );
+							$_REQUEST['rule'],   $_REQUEST['rulever'], $_REQUEST['ln'] );
 		}
 		
-		
+
 		
 		if (DB::isError($r)) 
 			die(print_r($r, 1));
@@ -104,14 +104,20 @@ switch ($_REQUEST['action']) {
 			$type = $location['type'];
 			if (!in_array($type, $valid_types))
 				die("Type $type was not valid");
-
-			$addr = explode('.', $location['ip']);
+				
+			$addr_ = explode(' ', $location['ip']);
+			
+			$addr = explode('.', $addr_[0]);
 			// Check that the ip address is valid
 			if (sizeof($addr) != 4)
 				die("address wasn't a valid ip address");
 			foreach($addr as $bit)
+			{
+
 				if (!is_numeric($bit) || $bit < 0 || $bit > 255)
 					die("address wasn't a valid ip address");
+			}
+
 			// Check that the ip address is not a private address
 			$private_addr = array('192', '10', '127', '172', '224');
 			if (in_array($addr[0], $private_addr))
@@ -384,7 +390,7 @@ switch ($_REQUEST['action']) {
 					if ($gid != $row['id'])
 						break;
 					print "<li>";
-					print "<a href='{$row['type']}://{$row['host']}:{$row['port']}/".urlencode("{$row['name']}")."'>";
+					print "<a href='{$row['type']}://{$row['host']}:{$row['port']}/".urlencode("{$row['shortname']}")."'>";
 					print $names[$row{'type'}]." to ";
 					print "{$row['host']} ({$row['ip']}:{$row['port']})";
 					print "</a></li>\n";
