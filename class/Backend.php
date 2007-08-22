@@ -244,7 +244,7 @@ class Backend {
 	*/
 	public function insert($sn,	$key, $tp, $server, $sertype, $rule,   $rulever, $ln)
 	{
-		$r = $this->db->query("INSERT INTO games (shortname, `key`, lastseen, tp, server, sertype, rule, rulever, firstseen, longname) VALUES (?, ?, ?, ?, ?, ?, ?, ?)", 									array($sn, $key, $this->now, $tp, $server, $sertype, $rule,   $rulever, $this->now , $ln));
+		$r = $this->db->query("INSERT INTO games (shortname, `key`, lastseen, tp, server, sertype, rule, rulever, firstseen, longname) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($sn, $key, $this->now, $tp, $server, $sertype, $rule,   $rulever, $this->now , $ln));
 		if (DB::isError ($r)) 
 		{	
 			 die ("error: " . $r->getMessage () . "\n");

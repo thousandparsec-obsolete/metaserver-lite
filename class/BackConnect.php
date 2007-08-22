@@ -54,6 +54,8 @@ class BackConnect
 	   $res = $this->game_connect->getMessage($this->frame->length);
 	   
 	   $this->frame->parse_data($res);
+	   
+	   
 
 	
 	}
@@ -75,6 +77,8 @@ class BackConnect
 	{
 		return $this->frame;
 	}
+	
+
 
 }
 
