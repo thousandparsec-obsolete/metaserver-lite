@@ -28,7 +28,7 @@ switch ($_REQUEST['action']) {
 		// Check all the required properties exist in the request
 		
 		
-		$required = array('name', 'tp', 'server', 'sertype', 'rule', 'rulever');
+		$required = array('sn', 'tp', 'server', 'sertype', 'rule', 'rulever');
 		foreach ($required as $r)
 			if (!array_key_exists($r, $_REQUEST))
 				die("Required key $r doesn't exist!");
@@ -63,7 +63,7 @@ switch ($_REQUEST['action']) {
 		
 		
 		
-		$result = $db->getKey( $_REQUEST['name'] );
+		$result = $db->getKey( $_REQUEST['sn'] );
 		if (sizeof($result) > 0) {
 			if (strcmp($result[0][0], $_REQUEST['key']) !== 0)
 				die ("Key was not valid...");
@@ -72,13 +72,13 @@ switch ($_REQUEST['action']) {
 			$r = $db->update($_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
 							$_REQUEST['rule'],   $_REQUEST['rulever'],
-							$_REQUEST['name']);
+							$_REQUEST['sn'], $_REQUEST['ln'], );
 		} else {
 			$r = $db->insert(
-							$_REQUEST['name'],	$_REQUEST['key'], 
+							$_REQUEST['sn'],	$_REQUEST['key'], 
 							$_REQUEST['tp'], 
 							$_REQUEST['server'], $_REQUEST['sertype'], 
-							$_REQUEST['rule'],   $_REQUEST['rulever']);
+							$_REQUEST['rule'],   $_REQUEST['rulever'], $_REQUEST['ln'], );
 		}
 		
 		
@@ -87,7 +87,7 @@ switch ($_REQUEST['action']) {
 			die(print_r($r, 1));
 
 		// Get the ID
-		$gid = $db->getId( $_REQUEST['name'] );
+		$gid = $db->getId( $_REQUEST['sn'] );
 	
 		
 
@@ -163,8 +163,8 @@ switch ($_REQUEST['action']) {
 		//print $seq->pack();
 		$sql_details = "
       SELECT
-      	games.id, name, tp, server, sertype, rule, rulever,
-      	type, host, ip, port, locations.lastseen AS lastseen
+      	games.id, sn, tp, server, sertype, rule, rulever,
+      	type, host, ip, port, locations.lastseen AS lastseen, ln
       FROM
       	games
       JOIN
@@ -200,7 +200,7 @@ switch ($_REQUEST['action']) {
 					$optional[] = array(array_search($key, $optional_index), $value, 0);
 			}
 			$details = array(
-				'name'		=> $row['name'],
+				'sn'		=> $row['sn'],
 				'key'		=> '',
 				'tp'		=> explode(',', $row['tp']),
 				'server'	=> $row['server'],
@@ -306,8 +306,8 @@ switch ($_REQUEST['action']) {
 			// @TODO: it should be in function !!!
 			$sql_details = "
       SELECT
-      	games.id, name, tp, server, sertype, rule, rulever,
-      	type, host, ip, port, locations.lastseen AS lastseen
+      	games.id, sn, tp, server, sertype, rule, rulever,
+      	type, host, ip, port, locations.lastseen AS lastseen, ln
       FROM
       	games
       JOIN
@@ -342,7 +342,7 @@ switch ($_REQUEST['action']) {
 		  				die ("error: " . $optional->getMessage () . "\n");
 					}	
 				
-				print "<h2>{$row['name']}</h2>\n";
+				print "<h2>{$row['sn']}</h2>\n";
 				print "<p>Running on {$row['sertype']} (Version: {$row['server']}) playing {$row['rule']} (Version: {$row['rulever']}) - {$optional['cmt']}</p>\n";
 
 				//$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
