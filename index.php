@@ -369,8 +369,10 @@
           {
           die ("error: " . $optional->getMessage () . "\n");
         }
-         
-        print "<h2>{$row['shortname']}</h2>\n";
+        if ($row['shortname']!="")
+          print "<h2>{$row['longname']} ({$row['shortname']})</h2>\n"; 
+        else
+          print "<h2>{$row['shortname']}</h2>\n";
         print "<p>Running on {$row['sertype']} (Version: {$row['server']}) playing {$row['rule']} (Version: {$row['rulever']}) - {$optional['cmt']}</p>\n";
          
         //$optional = array('plys', 'cons', 'objs', 'admin', 'cmt', 'turn');
@@ -404,7 +406,7 @@
         print "<p>Can be connected to via:\n</p><ul>\n";
          
         $names = array(
-        'tp' => 'Standard Connection',
+          'tp' => 'Standard Connection',
           'tps' => 'Secure Connection',
           'tphttp' => 'HTTP Tunnel Connection',
           'tphttps' => 'Secure HTTP Tunnel Connection',
