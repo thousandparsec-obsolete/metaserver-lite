@@ -163,7 +163,10 @@
       $db->insertOptional($gid, $option, $_REQUEST[$option] );
        
     }
-     
+    $frame = new Frame(Frame::OKAY, 1, array("message" => "metaserver - ok"));
+    $pack = $frame->pack();
+    echo $pack;
+    
     break;
      
     case 'get':

@@ -64,11 +64,7 @@
     // send okey frame
     
     
-    $frame = new Frame(Frame::OKAY, 1, array("message" => "backconnect - ok"));
     
-    $pack = $frame->pack();
-    
-    echo $pack;
     
     
     
