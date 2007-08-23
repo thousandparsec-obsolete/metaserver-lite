@@ -34,9 +34,9 @@
     if (!array_key_exists($r, $_REQUEST))
       die("Required key $r doesn't exist!");
     //include ("connect.php?")
-    print "<pre>";
-    var_dump($_REQUEST);
-    print "</pre>";
+  //  print "<pre>";
+  //  var_dump($_REQUEST);
+  //  print "</pre>";
      
      
     // Find the location details
@@ -436,4 +436,3 @@
     include "bits/end_page.inc";
     break;
   }
-

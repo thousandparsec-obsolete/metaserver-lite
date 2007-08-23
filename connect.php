@@ -55,8 +55,24 @@
      
     if ($_REQUEST['sn'] != $f_name || $_REQUEST['server'] != $f_server || $_REQUEST['sertype'] != $f_sertype || $_REQUEST['rule'] != $f_rule || $_REQUEST['rulever'] != $f_rulever )
     {
+    //	$frame = new Frame(Frame::FAIL, 1, array(""));
+    //	$pack = $frame->pack();
+    //	echo $pack;
       die("back-connect validation - failed");
     }
+    
+    // send okey frame
+    
+    
+    $frame = new Frame(Frame::OKAY, 1, array("message" => "backconnect - ok"));
+    
+    $pack = $frame->pack();
+    
+    echo $pack;
+    
+    
+    
+    
     /*
     //checking for tp
     if (array_search($_REQUEST['tp'], $f_tp) === NULL)
@@ -116,4 +132,3 @@
    
    
 ?>
-
