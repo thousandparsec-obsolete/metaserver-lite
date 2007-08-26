@@ -25,7 +25,7 @@
      
      
      
-    ($host != '' && $port != '' ) or die ('wrong parameters');
+    ($host != '' && $port != '' ) or throw new Exception ('wrong parameters');
      
     try {
       $bc = new BackConnect('203.122.246.117', 6923);
@@ -58,7 +58,7 @@
     //	$frame = new Frame(Frame::FAIL, 1, array(""));
     //	$pack = $frame->pack();
     //	echo $pack;
-      die("back-connect validation - failed");
+      throw new Exception("back-connect validation - failed");
     }
     
     // send okey frame

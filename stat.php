@@ -15,7 +15,7 @@
   inserting some test data
    
   */
-   
+try {
   $dsn = "mysqli://intart2_8:parsec@sql.intart2.nazwa.pl:3305/intart2_8";
    
   $time = time();
@@ -244,8 +244,10 @@
    
   include "bits/end_page.inc";
    
-   
+
+} catch (Exception $e) {
+    echo $e->getMessage();
+  } 
    
    
 ?>
-
