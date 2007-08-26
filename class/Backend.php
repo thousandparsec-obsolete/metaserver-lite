@@ -24,7 +24,7 @@
        
       if (DB::isError ($this->db))
         {
-        die ("Cannot connect: " . $this->db->getMessage () . "\n");
+        throw new Exception ("Cannot connect: " . $this->db->getMessage () . "\n");
       }
        
     }
@@ -54,7 +54,7 @@
        
       if (DB::isError ($r))
         {
-        die ("get_optional_servers error: " . $r->getMessage () . "\n");
+        throw new Exception ("get_optional_servers error: " . $r->getMessage () . "\n");
       }
       if (is_null($r[0][0]))
         $r[0][0] = 0;
@@ -92,7 +92,7 @@
        
       if (DB::isError ($r))
         {
-        die ("get_optional error: " . $r->getMessage () . "\n");
+        throw new Exception ("get_optional error: " . $r->getMessage () . "\n");
       }
        
       if (is_null($r[0][0]))
@@ -125,7 +125,7 @@
        
       if (DB::isError ($r))
         {
-        die ("error: " . $r->getMessage () . "\n");
+        throw new Exception ("error: " . $r->getMessage () . "\n");
       }
        
        
@@ -150,7 +150,7 @@
        
       if (DB::isError ($r))
         {
-        die ("game_number error: " . $r->getMessage () . "\n");
+        throw new Exception ("game_number error: " . $r->getMessage () . "\n");
       }
        
        
@@ -168,7 +168,7 @@
        
       if (DB::isError ($r))
         {
-        die ("error: " . $r->getMessage () . "\n");
+        throw new Exception ("error: " . $r->getMessage () . "\n");
       }
       return $r[0][0];
        
@@ -184,7 +184,7 @@
       $result = $this->db->getall("SELECT `key` FROM games WHERE shortname = ?", array($param ));
       if (DB::isError ($result))
         {
-        die ("error: " . $result->getMessage () . "\n");
+        throw new Exception ("error: " . $result->getMessage () . "\n");
       }
       return $result;
     }
@@ -200,7 +200,7 @@
        
       if (DB::isError ($r))
         {
-        die ("error: " . $r->getMessage () . "\n");
+        throw new Exception ("error: " . $r->getMessage () . "\n");
       }
        
        
@@ -220,7 +220,7 @@
        
       if (DB::isError ($r))
         {
-        die ("insert optional error: " . $r->getMessage () . "\n");
+        throw new Exception ("insert optional error: " . $r->getMessage () . "\n");
       }
        
     }
@@ -235,7 +235,7 @@
       $this->now, $tp, $server, $sertype, $rule, $rulever, $ln, $sn));
       if (DB::isError ($r))
         {
-        die ("error: " . $r->getMessage () . "\n");
+        throw new Exception ("error: " . $r->getMessage () . "\n");
       }
     }
      
@@ -247,7 +247,7 @@
       $r = $this->db->query("INSERT INTO games (shortname, `key`, lastseen, tp, server, sertype, rule, rulever, firstseen, longname) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)", array($sn, $key, $this->now, $tp, $server, $sertype, $rule, $rulever, $this->now , $ln));
       if (DB::isError ($r))
         {
-        die ("error: " . $r->getMessage () . "\n");
+        throw new Exception ("error: " . $r->getMessage () . "\n");
       }
     }
      
@@ -269,7 +269,7 @@
     public function getStatisticFromOptional ($key, $year, $month, $day, $type, $gid = false)
     {
       if ($type != 'avg' && $type != 'sum' && $type != 'max' && $type != 'min')
-        die("<br />wrong function parameters<br />");
+        throw new Exception("<br />wrong function parameters<br />");
       if ($gid !== false)
         {
         $add = " and gid = $gid";
@@ -320,7 +320,7 @@
         $group_by = " MONTH(FROM_UNIXTIME(update_time)) ";
          
       }
-      else die("<br />wrong function parameters<br />");
+      else throw new Exception("<br />wrong function parameters<br />");
       /*{
       $divide = 1;
       $update_time = " 1 = 1";
@@ -349,8 +349,8 @@
        
        
       if (DB::isError ($r))
-        {
-        die ("error: " . $r->getMessage () . "\n");
+      {
+        throw new Exception ("error: " . $r->getMessage () . "\n");
       }
       return $r;
        
@@ -364,4 +364,3 @@
    
    
 ?>
-

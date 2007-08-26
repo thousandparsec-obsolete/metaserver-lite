@@ -47,7 +47,7 @@
         $this->formatDataType1($data1);
       else if ($this->stat_type == 2)
       $this->formatDataType2($data1 , $data2 , $data3);
-      else die("wrong parameters or data type");
+      else throw new Exception("wrong parameters or data type");
        
     }
      
@@ -99,7 +99,7 @@
         $date = getdate(mktime (0, 0, 0, $key, 1 ));
         return "".$date['month']."";
       }
-      else die("wrong date type");
+      else throw new Exception("wrong date type");
        
     }
      
@@ -177,4 +177,3 @@
    
    
 ?>
-

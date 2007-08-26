@@ -46,7 +46,9 @@
       $r = $db->db->query($sql_details, array($time-60 * 10));
        
       if (DB::isError($r))
-        die(print_r($r, 1));
+      {
+        throw new Exception ("error: " . $r->getMessage () . "\n");
+      }
       echo '<?xml version="1.0" encoding="utf-8"?>
         <rss version="2.0" xml:base="http://www.thousandparsec.net/tp/" xmlns:dc="http://purl.org/dc/elements/1.1/">
         <channel>
@@ -76,7 +78,7 @@
          
         if (DB::isError ($optional))
           {
-          die ("error: " . $optional->getMessage () . "\n");
+          throw new Exception ("error: " . $optional->getMessage () . "\n");
         }
          
         echo '<item>
@@ -151,4 +153,3 @@
    
    
 ?>
-
