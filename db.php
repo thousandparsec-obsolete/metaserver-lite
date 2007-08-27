@@ -1,5 +1,7 @@
 <?php
 
+// FIXME: Is this file still used?
+
 require_once "DB.php";
 require_once "libtpproto-php/Frame.php";
 

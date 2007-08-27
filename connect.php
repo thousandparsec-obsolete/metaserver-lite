@@ -1,13 +1,11 @@
 <?php
-   
+  // FIXME: Is this file still used?
    
   require_once "class/GameConnect.php";
   require_once "class/BackConnect.php";
    
   //put this in different file !!!!
   include("class/Frame.php");
-   
-  
    
   /**
    
@@ -126,5 +124,3 @@
   //getData($_GET['host'], $_GET['port'], $_GET['frame'],$_GET['mode'] );
    
    
-   
-?>
