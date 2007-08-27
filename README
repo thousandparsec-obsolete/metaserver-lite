@@ -1,0 +1,13 @@
+METASERVER
+--------------
+
+REQUIREMENTS
+- PHP 5
+- MYSQL 5
+- PEAR
+- PEAR Image_Canvas
+- PEAR DB
+- PEAR Image_Graph 
+- PEAR Image_Color
+- Open Flash Chart (*.swf file in main catalog, and ofc-library in class catalog)
+
