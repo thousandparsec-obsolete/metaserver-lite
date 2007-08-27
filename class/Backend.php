@@ -16,7 +16,6 @@
     public $db;
     private $now;
      
-     
     public function __construct($dsn, $now)
     {
       $this->now = $now;
@@ -29,9 +28,8 @@
        
     }
      
-     
     /**
-    return number of games having this same optional parameter
+    Return number of games having this same optional parameter
      
     @param key optional parameter key
     @return number of games
@@ -63,10 +61,10 @@
     }
      
     /**
-    * substarct certain value from time - use this when you want to get values before
-    * set in class constructor
+    * Substract a certain value from time - use this when you want to get values before
+    * the time set in class constructor.
     *
-    * @param value number of secound you wanted to substract from time
+    * @param value Number of secound you wanted to substract from time
     *
     */
     public function substractFromTime($value)
@@ -75,7 +73,7 @@
     }
      
      
-    /**
+    /** FIXME: Where is my comment?
     @param optional key
     @return sum of for all games for given optional parameter
     */
@@ -100,7 +98,8 @@
        
       return $r;
     }
-    /**
+
+    /** FIXME: Where is my comment?
      
     @param gid game id
     @return all information for given game
@@ -128,7 +127,6 @@
         throw new Exception ("error: " . $r->getMessage () . "\n");
       }
        
-       
       return $r;
        
     }
@@ -153,11 +151,10 @@
         throw new Exception ("game_number error: " . $r->getMessage () . "\n");
       }
        
-       
       return $r[0][0];
     }
      
-    /**
+    /** FIXME: Where is my comment?
     *
     * @param name - game name
     * @return game id
@@ -174,7 +171,7 @@
        
     }
      
-    /**
+    /** FIXME: Where is my comment, what is the significance of the "key"?
     * @param para - game name
     * @return key from games table
     */
@@ -191,7 +188,8 @@
      
     /**
     insert into locations table
-     
+
+	FIXME: What arguments do I take?
     */
     public function replaceLocation($gid, $type, $host, $addr, $location)
     {
@@ -202,12 +200,10 @@
         {
         throw new Exception ("error: " . $r->getMessage () . "\n");
       }
-       
-       
     }
      
     /**
-    insert into optional table
+    Insert into optional table
      
     @param gid    -game id
     @param option - option key name
@@ -222,12 +218,12 @@
         {
         throw new Exception ("insert optional error: " . $r->getMessage () . "\n");
       }
-       
     }
-     
      
     /**
     update Games table
+
+	FIXME: What arguments do I take?
     */
     public function update($tp, $server, $sertype, $rule, $rulever, $sn, $ln)
     {
@@ -241,6 +237,8 @@
      
     /**
     insert into Games table
+
+	FIXME: What arguments do I take?
     */
     public function insert($sn, $key, $tp, $server, $sertype, $rule, $rulever, $ln)
     {
@@ -251,7 +249,7 @@
       }
     }
      
-    /*
+    /* FIXME: Captial letters and full stops would be good
     this should be shorter but..
     this function takes key, and dates.
     for all dates != 0 it return statistics for every hour
@@ -264,7 +262,6 @@
     @param day   - day
     @param type  - max, avg or nin - type of stats
     @param gid   - optional, game for whitch we want our statictics
-     
     */
     public function getStatisticFromOptional ($key, $year, $month, $day, $type, $gid = false)
     {
@@ -304,8 +301,6 @@
         $update_time .= " AND YEAR(FROM_UNIXTIME(update_time))=".$year;
         $update_time .= " AND MONTH(FROM_UNIXTIME(update_time))=".$month;
         $group_by = " DAY(FROM_UNIXTIME(update_time)) ";
-         
-         
       }
       else if ($day == 0 && $month == 0)
       {
@@ -318,7 +313,6 @@
         $update_time .= " AND update_time <= ".$time_to;
         $update_time .= " AND YEAR(FROM_UNIXTIME(update_time))=".$year;
         $group_by = " MONTH(FROM_UNIXTIME(update_time)) ";
-         
       }
       else throw new Exception("<br />wrong function parameters<br />");
       /*{
@@ -332,7 +326,6 @@
         $type = "round(".$type."(CONVERT(value,UNSIGNED))) ";
       else $type = $type."(CONVERT(value,UNSIGNED)) ";
        
-       
       $sql = "
         SELECT  ".$group_by.", ".$type."
         FROM optional
@@ -340,27 +333,13 @@
         GROUP BY  ".$group_by." ".$add_end."
         ORDER BY update_time  ";
        
-      // echo $sql;
-       
-       
-       
       $r = $this->db->getAll($sql);
-       
-       
        
       if (DB::isError ($r))
       {
         throw new Exception ("error: " . $r->getMessage () . "\n");
       }
+
       return $r;
-       
     }
-     
-     
-     
-     
   }
-   
-   
-   
-?>

@@ -1,11 +1,7 @@
 <?php
-   
+  // FIXME: This should include from the correct location 
   /*change path later!!!!*/
-   
   //include('Frame.php');
-   
-   
-   
    
   class BackConnect {
     private $game_connect;
@@ -13,13 +9,17 @@
      
     public function __construct($host, $port)
     {
+      // Where does game_connect come from?
       $this->game_connect = new GameConnect($host, $port);
-       
     }
      
      
     /**
     connect to game
+
+    FIXME: Where is the error checking here?
+      - The server could return a failed frame...
+      - The the connection string should be something like "Backconnect from Metaserver ($version) $hostname".
     */
     public function connect()
     {
@@ -34,17 +34,18 @@
       $res = $this->game_connect->getMessage($f->length);
        
       $f->parse_data($res);
-       
     }
      
     /**
     get all games. data stored in frame
+
+    FIXME: Where is the error checking here?
+      - The server could return a failed frame...
     */
     public function get_games()
     {
       $this->frame = new Frame(Frame::GETGAMES, 1, array());
       $message = $this->frame->pack();
-       
        
       $this->game_connect->sendMessage($message);
       $res = $this->game_connect->getMessage(16);
@@ -53,10 +54,6 @@
       $res = $this->game_connect->getMessage($this->frame->length);
        
       $this->frame->parse_data($res);
-       
-       
-       
-       
     }
      
     public function disconnect()
@@ -77,9 +74,4 @@
       return $this->frame;
     }
      
-     
-     
   }
-   
-?>
-

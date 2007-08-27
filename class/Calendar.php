@@ -1,8 +1,6 @@
 <?php
    
-   
   class Calendar {
-     
     /**
      
     draw calendar in form of table for given year/month, and also mark selected day
@@ -25,32 +23,29 @@
       $fd = getdate($first_day);
       $first_week_day = $fd['wday'];
        
-       
-       
-       
       $return = "<table style='text-align:center'>";
       $return .= "<tr>
         <td>
-        <a href='".$link."&amp;year=".($year-1)."&amp;month=$month&amp;day=0&amp;type=3'>&lt;&lt;</a>
+        <a href='$link&amp;year=".($year-1)."&amp;month=$month&amp;day=0&amp;type=3'>&lt;&lt;</a>
         </td>
         <td style='text-align:center' colspan='5'>
-        <a href='".$link."&amp;year=".$year."&amp;month=$month&amp;day=0&amp;type=3'>".$year."</a>
+        <a href='$link&amp;year=$year&amp;month=$month&amp;day=0&amp;type=3'>$year</a>
         </td>
         <td>
-        <a href='".$link."&amp;year=".($year+1)."&amp;month=$month&amp;day=0&amp;type=3'>&gt;&gt;</a>
+        <a href='$link&amp;year=".($year+1)."&amp;month=$month&amp;day=0&amp;type=3'>&gt;&gt;</a>
         </td>
         </tr>";
       $return .= "<tr>
         <td>
-        <a href='".$link."&amp;year=".$year."&amp;month=".($month-1)."&amp;day=0&amp;type=2'>&lt;&lt;</a>
+        <a href='$link&amp;year=$year&amp;month=".($month-1)."&amp;day=0&amp;type=2'>&lt;&lt;</a>
         </td>
         <td style='text-align:center' colspan='5'>
-        <a href='".$link."&amp;year=".$year."&amp;month=".$month."&amp;day=0&amp;type=2'>
+        <a href='$link&amp;year=$year&amp;month=$month&amp;day=0&amp;type=2'>
         ".$fd['month']."
         </a>
         </td>
         <td>
-        <a href='".$link."&amp;year=".$year."&amp;month=".($month+1)."&amp;day=0&amp;type=2'>&gt;&gt;</a>
+        <a href='$link&amp;year=$year&amp;month=".($month+1)."&amp;day=0&amp;type=2'>&gt;&gt;</a>
         </td>
         </tr>";
       $return .= "<tr><td>S</td><td>M</td><td>T</td><td>W</td><td>T</td><td>F</td><td>S</td></tr>";
@@ -69,9 +64,9 @@
           $return .= "<td>";
           if ($mark == $now)
             {
-            $return .= "<b>".$now."</b>";
+            $return .= "<b>$now</b>";
           }
-          else $return .= "<a href='".$link."&amp;year=$year&amp;month=$month&amp;day=$now&amp;type=1'>".$now."</a>";
+          else $return .= "<a href='$link&amp;year=$year&amp;month=$month&amp;day=$now&amp;type=1'>$now</a>";
           $return .= "</td>";
           $now++;
         }
@@ -87,9 +82,9 @@
           $return .= "<td>";
           if ($mark == $now)
             {
-            $return .= "<b>".$now."</b>";
+            $return .= "<b>$now</b>";
           }
-          else $return .= "<a href='".$link."&amp;year=$year&amp;month=$month&amp;day=$now&amp;type=1'>".$now."</a>";
+          else $return .= "<a href='$link&amp;year=$year&amp;month=$month&amp;day=$now&amp;type=1'>$now</a>";
           $return .= "</td>";
           $now++;
         }
@@ -100,16 +95,9 @@
         }
         $return .= "</tr>";
       }
-       
-       
       $return .= "</table>";
        
       return $return;
-       
     }
      
   }
-   
-   
-?>
-

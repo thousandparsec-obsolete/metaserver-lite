@@ -1,14 +1,7 @@
 <?php
    
-   
-  // ?? check this library !!!
-   
-   
-   
-   
-   
+  // FIXME: check this library !!!
   class RSS {
-     
      
     /**
     create RSS feed
@@ -18,16 +11,14 @@
     */
     public static function createRss($link)
     {
-       
-       
+      // FIXME: This should be in config.php     
       $dsn = "mysqli://intart2_8:parsec@sql.intart2.nazwa.pl:3305/intart2_8";
        
       $time = time();
        
       $db = new Backend($dsn, $time);
        
-      //!! make function from this !!!!!
-       
+      // FIXME: !! make function from this !!!!!
       $sql_details = "
         SELECT
         games.id, shortname, tp, server, sertype, rule, rulever,
@@ -54,11 +45,8 @@
         <channel>
         <title>Thousand Parsec New Games</title>
         <link>'.$link.'</link>
-        <description>Information about Thousand Parsec new Games</description>
+        <description>Information about Thousand Parsec New Games</description>
         <language>en-us</language>';
-       
-       
-       
        
       $r->fetchInto($row, DB_FETCHMODE_ASSOC);
       echo '<lastBuildDate>'.date("r", $row['firstseen']).'</lastBuildDate>';
@@ -67,7 +55,6 @@
         if (sizeof($row) == 0)
           break;
         $gid = $row['id'];
-         
          
         $optional = $db->db->getAssoc("
           SELECT optional.key, optional.value
@@ -144,12 +131,6 @@
        
       echo '</channel>
         </rss>';
-       
-       
-       
     }
      
   }
-   
-   
-?>

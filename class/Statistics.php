@@ -11,13 +11,10 @@
   1 - key->valye
   2 - key->{min; avg; max}
    
-   
+  FIXME: These functions need comments 
    
   */
-   
-   
   class Statistics {
-     
      
     private $date_type;
     private $stat_type;
@@ -167,13 +164,3 @@
       return $this->data;
     }
   }
-   
-   
-   
-   
-   
-   
-   
-   
-   
-?>

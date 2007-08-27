@@ -1,26 +1,23 @@
 <?php
    
-   
+  // FIXME: I need a comment 
   class GameConnect {
-     
-     
     private $socket;
-     
      
     public function __construct($host, $port)
     {
-      //prabobly to change\
-      //echo "connecting<br />";
+      // FIXME: Die instead of an exception!
       $this->socket = & socket_create(AF_INET, SOCK_STREAM, 0) or die("Could not create socket\n");
       socket_set_option($this->socket,
-        SOL_SOCKET, // socket level
-      SO_RCVTIMEO, // timeout option
+        SOL_SOCKET,  // socket level
+        SO_RCVTIMEO, // timeout option
       array(
       "sec" => 10, // Timeout in seconds
       "usec" => 0 // I assume timeout in microseconds
       )
       );
        
+      // FIXME: Die instead of an exception!
       socket_connect($this->socket, $host, $port) or die("Could not connect to server\n");
       //echo "connected<br />";
     }
@@ -35,6 +32,7 @@
       if (false === ($msg = socket_read($this->socket, $length)) )
         {
         socket_close($this->socket->socket_close);
+        // FIXME: Die instead of an exception!
         die("Could not send data to server\n");
       };
       return $msg;
@@ -51,6 +49,7 @@
       if (false === (socket_write($this->socket, $message) ))
         {
         socket_close($this->socket);
+        // FIXME: Die instead of an exception!
         die("Could not read server response\n");
       };
     }
@@ -62,10 +61,4 @@
     {
       socket_close($this->socket);
     }
-     
-     
   }
-   
-   
-?>
-

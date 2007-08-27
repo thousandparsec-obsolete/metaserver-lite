@@ -1,29 +1,18 @@
 <?php
-   
-   
-   
   /*
   similar to Statistics, dataset looks like:
   stat_type:
   1 - key->valye
   2 - key->{min; avg; max}
    
-   
   */
-   
-   
   class Charts {
-     
-     
      
     /**
     draw graph using  image_graph from pear library
      
     @param data      - data from
     @param stat_type - stat type, not used now.
-     
-     
-     
     */
     public static function drawPlotChart($data, $stat_type)
     {
@@ -48,13 +37,12 @@
         9)
       );
        
-       
-      $gridY = & $plotarea->addNew('line_grid', null, IMAGE_GRAPH_AXIS_Y);
+      $gridY =& $plotarea->addNew('line_grid', null, IMAGE_GRAPH_AXIS_Y);
       $gridY->setLineColor('gray@0.1');
-      $gridX = & $plotarea->addNew('line_grid', null, IMAGE_GRAPH_AXIS_X);
+      $gridX =& $plotarea->addNew('line_grid', null, IMAGE_GRAPH_AXIS_X);
       $gridX->setLineColor('lightgray@0.1');
        
-      $axisX = & $plotarea->getAxis(IMAGE_GRAPH_AXIS_X);
+      $axisX =& $plotarea->getAxis(IMAGE_GRAPH_AXIS_X);
       $axisX->setFontAngle('vertical');
        
       if ($stat_type == 1)
@@ -63,8 +51,6 @@
         foreach ($data as $key => $value)
         {
           $dataset->addPoint($key."  ", $value);
-           
-           
         }
          
         $plot = & $plotarea->addNew('line', array(&$dataset));
@@ -91,11 +77,8 @@
         $plot1->setLineColor('green');
         $plot2->setLineColor('yellow');
         $plot3->setLineColor('blue');
-         
-         
-         
       }
-      else die("wrong parameter");
+      else die("wrong parameter"); // FIXME: There is a die here!
       echo $graph->done(
       Array('tohtml' => true,
         'filename' => 'tmpimage.png',
@@ -103,13 +86,6 @@
         'urlpath' => 'images/' )
       );
        
-       
     }
-     
-     
-     
   }
-   
-   
-?>
 

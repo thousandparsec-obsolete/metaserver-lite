@@ -1,8 +1,7 @@
 <?php
 
 /**
- *
- *
+ * FIXME: Need a comment please..
  *
  */
 
@@ -21,4 +20,3 @@ class Games {
 
 }
 
-?>
