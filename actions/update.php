@@ -1,17 +1,12 @@
 <?php
-// Check all the required properties exist in the request
-     
+
   try
   {
+    // Check all the required properties exist in the request
     $required = array('sn', 'tp', 'server', 'sertype', 'rule', 'rulever');
     foreach ($required as $r)
-    if (!array_key_exists($r, $_REQUEST))
-      throw new Exception("Required key $r doesn't exist!");
-    //include ("connect.php?")
-  //  print "<pre>";
-  //  var_dump($_REQUEST);
-  //  print "</pre>";
-     
+      if (!array_key_exists($r, $_REQUEST))
+        throw new Exception("Required key $r doesn't exist!");
      
     // Find the location details
     $location_values = array('type', 'dns', 'ip', 'port');
@@ -33,12 +28,10 @@
         break;
     }
      
-     
+    // FIXME: Should this be a include or require? 
+	// FIXME: Shouldn't we do the verification before we do any back connections?
+	// FIXME: Shouldn't this be in "classes"
     include("connect.php");
-     
-     
-     
-     
      
     $result = $db->getKey($_REQUEST['sn'] );
     if (sizeof($result) > 0)
@@ -61,20 +54,11 @@
         $_REQUEST['rule'], $_REQUEST['rulever'], $_REQUEST['ln'] );
     }
      
-     
-     
     if (DB::isError($r))
       throw new Exception ("error: " . $r->getMessage () . "\n");
      
     // Get the ID
     $gid = $db->getId($_REQUEST['sn'] );
-     
-     
-     
-     
-     
-     
-     
      
     // Validate the location stuff
     foreach ($locations as $location)

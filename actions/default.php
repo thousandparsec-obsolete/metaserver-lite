@@ -188,6 +188,6 @@
     include "bits/end_page.inc";
 
   } catch (Exception $e) {
+	// FIXME: Should probably do more then just print this message...
     echo $e->getMessage();
   }
-?>

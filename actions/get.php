@@ -2,15 +2,16 @@
 
   try
   {
+    // FIXME: Why is now in the past?
     $now = time()-60 * 10;
      
      
     $r = $db->gamesNumber();
      
-     
     $seq = new Frame(Frame::SEQUENCE, 1, array('no' => $r));
     print $seq->pack();
-     
+
+    // FIXME: Shouldn't this be using the Backend Class?     
     $sql_details = "
       SELECT
       games.id, shortname, tp, server, sertype, rule, rulever,
@@ -30,12 +31,7 @@
       throw new Exception ("Error: " . $r->getMessage () . "\n");
     }
      
-    //if (DB::isError($r))
-    // die(new Frame(Frame::FAIL, 1, array('s' => print_r($r, 1))));
-     
-     
     $r->fetchInto($row, DB_FETCHMODE_ASSOC);
-     
     while (true)
     {
       if (sizeof($row) == 0)
@@ -77,7 +73,8 @@
         $lastseen = max($row['lastseen'], $lastseen);
       }
        while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
-       
+      
+      // FIXME: This doesn't look right... 
       //$game = new Frame(Frame::GAME, 1, $details);
       //print $game->pack();
       echo "Frame print disabled.<br />";
@@ -89,4 +86,3 @@
     $pack = $frame->pack();
     echo $pack;
   }
-?>
