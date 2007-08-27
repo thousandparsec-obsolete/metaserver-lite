@@ -1,7 +1,7 @@
 <?php
 
 /*
-*
+* FIXME: Is this file used?
 *	class responsible for all language function, dictionary
 *	(all static metods and field)
 */
