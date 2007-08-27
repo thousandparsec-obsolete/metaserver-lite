@@ -1,39 +1,33 @@
 <?php
    
-   
   require_once "DB.php";
   require_once "class/Backend.php";
   require_once "class/Statistics.php";
   require_once "class/Calendar.php";
   require_once "class/Charts.php";
   require_once "class/SwfCharts.php";
+
+  // FIXME: Where do these come from? are they part of PEAR?
   require_once 'Image/Graph.php';
   require_once 'Image/Canvas.php';
   include_once 'class/ofc-library/open_flash_chart_object.php';
-  /**
-   
-  inserting some test data
-   
-  */
+
 try {
-  $dsn = "mysqli://intart2_8:parsec@sql.intart2.nazwa.pl:3305/intart2_8";
-   
+  // FIXME: This should be in config.php
+  $dsn  = "mysqli://intart2_8:parsec@sql.intart2.nazwa.pl:3305/intart2_8";
   $time = time();
-   
-  $db = new Backend($dsn, $time);
+  $db   = new Backend($dsn, $time);
    
   $time_array = getdate();
    
   $month = $_REQUEST['month'];
-  $day = $_REQUEST['day'];
-  $year = $_REQUEST['year'];
-  $type = $_REQUEST['type'];
+  $day   = $_REQUEST['day'];
+  $year  = $_REQUEST['year'];
+  $type  = $_REQUEST['type'];
   $graph = $_REQUEST['graph'];
-  $agr = $_REQUEST['agr'];
-  $opt = $_REQUEST['opt'];
-  $gid = $_REQUEST['gid'];
-   
-   
+  $agr   = $_REQUEST['agr'];
+  $opt   = $_REQUEST['opt'];
+  $gid   = $_REQUEST['gid'];
    
   if ($month == "")
     $month = $time_array['mon'];
@@ -55,8 +49,6 @@ try {
     $opt = 'plys';
   if ($gid == "")
     $gid = 0;
-   
-   
    
   if ($type == 1)
     {
@@ -84,36 +76,32 @@ try {
   $stat->read_data($r);
   $data = $stat->getData();
    
-   
-   
-   
   include "bits/start_page.inc";
-   
-  //
    
 ?>
 		<div id="right" style="width: 300px;">
 		<?php include "bits/start_section.inc"; ?> 
 		<div class="stats">
 <?php
-   
-  echo Calendar::draw($year, $month, $type, "stat.php?graph=".$graph."&amp;agr=".$agr."&amp;opt=".$opt."&amp;gid=".$gid, $day);
-   
+ 
+  echo Calendar::draw($year, $month, $type, "stat.php?graph=$graph&amp;agr=$agr&amp;opt=$opt&amp;gid=".$gid, $day);
+
+  // FIXME: The formatting of this HTML could use a little work...   
   echo "<br />agregate functions:<br /><br />
     <table width='200px'>
     <tr>
     <td>
-    <a href='stat.php?graph=".$graph."&amp;agr=max&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+    <a href='stat.php?graph=$graph&amp;agr=max&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
     max
     </a>
     </td>
     <td>
-    <a href='stat.php?graph=".$graph."&amp;agr=avg&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+    <a href='stat.php?graph=$graph&amp;agr=avg&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
     avg
     </a>
     </td>
     <td>
-    <a href='stat.php?graph=".$graph."&amp;agr=min&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+    <a href='stat.php?graph=$graph&amp;agr=min&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
     min
     </a>
     </td>
@@ -126,32 +114,23 @@ try {
   cons  2  number of clients currently connected
   objs  3  number of "objects" in the game universe
   */
-  echo "<a href='stat.php?graph=".$graph."&amp;agr=".$agr."&amp;opt=plys&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+  echo "<a href='stat.php?graph=$graph&amp;agr=$agr&amp;opt=plys&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
     number of players in the game
     </a><br />";
-  echo "<a href='stat.php?graph=".$graph."&amp;agr=".$agr."&amp;opt=cons&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+  echo "<a href='stat.php?graph=$graph&amp;agr=$agr&amp;opt=cons&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
     number of clients currently connected
     </a><br />";
-  echo "<a href='stat.php?graph=".$graph."&amp;agr=".$agr."&amp;opt=objs&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+  echo "<a href='stat.php?graph=$graph&amp;agr=$agr&amp;opt=objs&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
     number of \"objects\" in the game universe
     </a><br />";
    
   echo "<br />choose server:<br /><br />";
-  echo "<a href='stat.php?graph=".$graph."&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=0'>
+  echo "<a href='stat.php?graph=$graph&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=0'>
     all
     </a><br />";
    
-  /*
-  put this into Backend class later!!
-  */
-  $sql_details = "
-    SELECT
-    id, shortname
-    FROM
-    games
-    ORDER BY
-    id";
-   
+  // FIXME: put this into Backend class later!!
+  $sql_details = "SELECT id, shortname FROM games ORDER BY id";
   $res = $db->db->query($sql_details);
   $res->fetchInto($row, DB_FETCHMODE_ASSOC);
   while (true)
@@ -159,8 +138,7 @@ try {
     if (sizeof($row) == 0)
       break;
      
-     
-    echo "<a href='stat.php?graph=".$graph."&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$row['id']."'>
+    echo "<a href='stat.php?graph=$graph&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=".$row['id']."'>
       ".$row['shortname']."
       </a><br />";
     $res->fetchInto($row, DB_FETCHMODE_ASSOC);
@@ -173,9 +151,10 @@ try {
 <?php include "bits/end_section.inc"; ?> 
 </div>
 
+<div id="left" style="margin: 0 310px 0 0;">
 <?php
-   
-   
+
+  include "bits/start_section.inc";   
    
   if ($graph == 1)
     {
@@ -192,10 +171,10 @@ try {
     echo "
       <br /><br />
        
-      <a href='stat.php?graph=2&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+      <a href='stat.php?graph=2&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
       change to graph
       </a> |
-      <a href='stat.php?graph=3&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+      <a href='stat.php?graph=3&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
       change to flash
       </a>
       </div>";
@@ -204,17 +183,17 @@ try {
   {
     echo "<div style='text-align:center;margin-right:30px;'>";
     "<br /><br />";
-    //  $link = "statswf.php?graph=3&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid;
+    //  $link = "statswf.php?graph=3&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=".$gid;
     $link = "data.txt";
     SwfCharts::drawPlotChart($data, 2);
     open_flash_chart_object(450, 400, $link );
      
     echo "
       <br /><br />
-      <a href='stat.php?graph=2&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+      <a href='stat.php?graph=2&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
       change to graph
       </a> |
-      <a href='stat.php?graph=1&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+      <a href='stat.php?graph=1&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
       change to table
       </a>
       </div>";
@@ -227,27 +206,22 @@ try {
     echo "
       <br /><br />
        
-      <a href='stat.php?graph=1&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+      <a href='stat.php?graph=1&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
       change to table
       </a> |
-      <a href='stat.php?graph=3&amp;agr=".$agr."&amp;opt=".$opt."&amp;month=".$month."&amp;year=".$year."&amp;day=".$day."&amp;type=".$type."&amp;gid=".$gid."'>
+      <a href='stat.php?graph=3&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=$gid'>
       change to flash
       </a>
       </div>";
   }
-   
-   
-   
-   
-  //$r = $db->getStatisticFromOptional ('plys', 2007 , 0, 1 );
-   
-   
+
+  include "bits/end_section.inc";
+  echo "</div>";
   include "bits/end_page.inc";
    
 
 } catch (Exception $e) {
-    echo $e->getMessage();
-  } 
-   
-   
-?>
+  //FIXME: This should probably have more then just the error message?
+  // What about the heading/footer
+  echo $e->getMessage();
+} 

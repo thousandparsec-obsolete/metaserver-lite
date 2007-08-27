@@ -1,27 +1,27 @@
 <?php
+	// FIXME: Why does this file use tabs while every other file use spaces?
+
 	require_once "DB.php";
 	require_once "class/Backend.php";
 	require_once "class/Statistics.php";
 	require_once "class/SwfCharts.php";
 
-	
-	
-	$dsn = "mysqli://intart2_8:parsec@sql.intart2.nazwa.pl:3305/intart2_8";
-
+	// FIXME: This should be in config.php	
+	$dsn  = "mysqli://intart2_8:parsec@sql.intart2.nazwa.pl:3305/intart2_8";
 	$time = time();
+	$db   = new Backend($dsn, $time);
 
-	$db = new Backend($dsn, $time);
-	
+	// FIXME: This looks like it is very similar to stats.php?	
 	$time_array = getdate();
 	
 	$month = $_GET['month'];
-	$day = $_GET['day'];
-	$year = $_GET['year'];
-	$type = $_GET['type'];
+	$day   = $_GET['day'];
+	$year  = $_GET['year'];
+	$type  = $_GET['type'];
 	$graph = $_GET['graph'];
-	$agr = $_GET['agr'];
-	$opt = $_GET['opt'];
-	$gid = $_GET['gid'];
+	$agr   = $_GET['agr'];
+	$opt   = $_GET['opt'];
+	$gid   = $_GET['gid'];
 	
 	
 	if ($graph == "") 
@@ -46,8 +46,6 @@
 		$opt = 'plys';
 	if ($gid == "")
 		$gid = 0;
-	
-	
 	
 	if ($type == 1)
 	{
@@ -75,8 +73,5 @@
 	$stat->read_data($r);
 	$data = $stat->getData();
 	
-	
 	SwfCharts::drawPlotChart($data, 2);
 	
-	 
-?>
