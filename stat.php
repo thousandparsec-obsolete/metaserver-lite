@@ -187,15 +187,13 @@ try {
     $link = "data.txt";
     
 
-    
-		    
    
 
-    $coded = base64_encode(serialize(array("data" => $data, "type" => 2)  ) );
+    $coded = base64_encode(serialize(array($type, $opt, $year , $month, $day, $agr, $gid ) ) );
 
 
     
-    open_flash_chart_object(450, 400, "actions/drawChart.php?data_=2".$coded );
+    open_flash_chart_object(450, 400, "drawChart.php?data_=".$coded );
      
     echo "
       <br /><br />
@@ -230,7 +228,9 @@ try {
    
 
 } catch (Exception $e) {
-  //FIXME: This should probably have more then just the error message?
-  // What about the heading/footer
+
   echo $e->getMessage();
+  include "bits/end_section.inc";
+  echo "</div>";
+  include "bits/end_page.inc";
 } 
