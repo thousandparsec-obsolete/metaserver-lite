@@ -3,6 +3,7 @@
   try
   {
     // FIXME: Why is now in the past?
+
     $now = time()-60 * 10;
      
      
@@ -74,9 +75,9 @@
       }
        while ($r->fetchInto($row, DB_FETCHMODE_ASSOC));
       
-      // FIXME: This doesn't look right... 
-      //$game = new Frame(Frame::GAME, 1, $details);
-      //print $game->pack();
+
+      $game = new Frame(Frame::GAME, 1, $details);
+      print $game->pack();
       echo "Frame print disabled.<br />";
     }
     

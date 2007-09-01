@@ -78,7 +78,7 @@
         $plot2->setLineColor('yellow');
         $plot3->setLineColor('blue');
       }
-      else die("wrong parameter"); // FIXME: There is a die here!
+      else throw new Exception("wrong parameter"); 
       echo $graph->done(
       Array('tohtml' => true,
         'filename' => 'tmpimage.png',
@@ -88,4 +88,3 @@
        
     }
   }
-

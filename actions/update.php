@@ -1,5 +1,8 @@
 <?php
 
+  require_once "class/GameConnect.php";
+  require_once "class/BackConnect.php";
+  include("class/Frame.php");
   try
   {
     // Check all the required properties exist in the request
@@ -28,10 +31,47 @@
         break;
     }
      
-    // FIXME: Should this be a include or require? 
-	// FIXME: Shouldn't we do the verification before we do any back connections?
-	// FIXME: Shouldn't this be in "classes"
-    include("connect.php");
+   $host = $locations[0]['dns'];
+    $port = $locations[0]['port'];
+     
+     
+     
+     
+    ($host != '' && $port != '' ) or throw new Exception ('wrong parameters');
+     
+    try {
+      $bc = new BackConnect('203.122.246.117', 6923);
+       
+      $bc->connect();
+      $bc->get_games();
+      $bc->disconnect();
+    }
+    catch (Exception $e)
+    {
+      $bc->disconnect();
+      echo 'Caught exception: ', $e->getMessage(), "\n";
+    }
+     
+    $f = $bc->getFrame();
+     
+    $f_name = $f->name;
+    $f_tp = $f->tp; //array
+    $f_server = $f->server;
+    $f_sertype = $f->sertype;
+    $f_rule = $f->rule;
+    $f_rulever = $f->rulever;
+    $f_locations = $f->locations; //array
+    $f_optional = $f->optional; //array
+     
+     
+     
+    if ($_REQUEST['sn'] != $f_name || $_REQUEST['server'] != $f_server || $_REQUEST['sertype'] != $f_sertype || $_REQUEST['rule'] != $f_rule || $_REQUEST['rulever'] != $f_rulever )
+    {
+    //	$frame = new Frame(Frame::FAIL, 1, array(""));
+    //	$pack = $frame->pack();
+    //	echo $pack;
+      throw new Exception("back-connect validation - failed");
+    }
      
     $result = $db->getKey($_REQUEST['sn'] );
     if (sizeof($result) > 0)

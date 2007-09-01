@@ -34,6 +34,8 @@
       $res = $this->game_connect->getMessage($f->length);
        
       $f->parse_data($res);
+      
+      $f->
     }
      
     /**

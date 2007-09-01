@@ -64,6 +64,9 @@ CREATE TABLE `optional` (
   `value` varchar(255) NOT NULL,
   `update_time` bigint(20) NOT NULL,
 ) ENGINE=MyISAM AUTO_INCREMENT=13 DEFAULT CHARSET=latin1;
+
+
+
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;

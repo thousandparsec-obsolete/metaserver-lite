@@ -1,6 +1,6 @@
 <?php
    
-  // FIXME: check this library !!!
+
   class RSS {
      
     /**

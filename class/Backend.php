@@ -73,7 +73,10 @@
     }
      
      
-    /** FIXME: Where is my comment?
+    /** 
+    
+    get sum of for all games for given optional parameter
+    
     @param optional key
     @return sum of for all games for given optional parameter
     */
@@ -99,7 +102,9 @@
       return $r;
     }
 
-    /** FIXME: Where is my comment?
+    /** 
+    
+    get all data from locations table
      
     @param gid game id
     @return all information for given game
@@ -132,7 +137,9 @@
     }
      
     /**
-    * @return Returns the number of games currently avalible
+     get number of games currently avalible 
+      
+     @return Returns the number of games currently avalible
     */
     public function gamesNumber()
     {
@@ -154,9 +161,10 @@
       return $r[0][0];
     }
      
-    /** FIXME: Where is my comment?
+    /** 
+    get game id for given shortname
     *
-    * @param name - game name
+    * @param name - game shortname
     * @return game id
     */
     public function getId($name )
@@ -171,14 +179,16 @@
        
     }
      
-    /** FIXME: Where is my comment, what is the significance of the "key"?
-    * @param para - game name
+    /** 
+    
+    return key from games table for given shortname
+    * @param shortname - game shortname
     * @return key from games table
     */
-    public function getKey($param)
+    public function getKey($shortname)
     {
        
-      $result = $this->db->getall("SELECT `key` FROM games WHERE shortname = ?", array($param ));
+      $result = $this->db->getall("SELECT `key` FROM games WHERE shortname = ?", array($shortname ));
       if (DB::isError ($result))
         {
         throw new Exception ("error: " . $result->getMessage () . "\n");
@@ -188,13 +198,19 @@
      
     /**
     insert into locations table
+	
+	@param  gid  - game id
+	@param  type - type
+	@param  host - host
+	@param  ip - ip
+	@param  port - port
+	
 
-	FIXME: What arguments do I take?
     */
-    public function replaceLocation($gid, $type, $host, $addr, $location)
+    public function replaceLocation($gid, $type, $host, $ip, $port)
     {
       $r = $this->db->query("REPLACE INTO locations (gid, `type`, host, ip, port, lastseen) VALUES (?, ?, ?, ?, ?, ?)",
-        array($gid, $type, $host, $addr, $location, $this->now));
+        array($gid, $type, $host, $ip, $port, $this->now));
        
       if (DB::isError ($r))
         {
@@ -222,8 +238,14 @@
      
     /**
     update Games table
+	 @param  tp       - Supported protocol version
+	 @param  server   - The version of the server
+	 @param  sertype  - The name of the server software
+	 @param  rule     - The name of the ruleset
+	 @param  rulever  - The version of the ruleset
+	 @param  sn       - short name for the game
+	 @param  ln       - long name for the game
 
-	FIXME: What arguments do I take?
     */
     public function update($tp, $server, $sertype, $rule, $rulever, $sn, $ln)
     {
@@ -238,7 +260,15 @@
     /**
     insert into Games table
 
-	FIXME: What arguments do I take?
+    @param  sn       - short name for the game
+    @param  key      - The key for the game
+	 @param  tp       - Supported protocol version
+	 @param  server   - The version of the server
+	 @param  sertype  - The name of the server software
+	 @param  rule     - The name of the ruleset
+	 @param  rulever  - The version of the ruleset
+	 @param  ln       - long name for the game 
+
     */
     public function insert($sn, $key, $tp, $server, $sertype, $rule, $rulever, $ln)
     {
@@ -249,12 +279,11 @@
       }
     }
      
-    /* FIXME: Captial letters and full stops would be good
-    this should be shorter but..
-    this function takes key, and dates.
-    for all dates != 0 it return statistics for every hour
-    for if day==0 it return statistic for all day in  month
-    for month == 0 & day == 0 it returns statistics for every month (sum of all statistics)
+    /* 
+    This function takes key, and dates.
+    For all dates != 0 it return statistics for every hour
+    For if day==0 it return statistic for all day in  month
+    For month == 0 & day == 0 it returns statistics for every month (sum of all statistics)
      
     @param key   - key from optional talbe for which we want our statitics
     @param year  - year in XXXX format

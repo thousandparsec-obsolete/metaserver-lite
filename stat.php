@@ -5,7 +5,7 @@
   require_once "class/Statistics.php";
   require_once "class/Calendar.php";
   require_once "class/Charts.php";
-  require_once "class/SwfCharts.php";
+  
 
   // FIXME: Where do these come from? are they part of PEAR?
   require_once 'Image/Graph.php';
@@ -185,8 +185,17 @@ try {
     "<br /><br />";
     //  $link = "statswf.php?graph=3&amp;agr=$agr&amp;opt=$opt&amp;month=$month&amp;year=$year&amp;day=$day&amp;type=$type&amp;gid=".$gid;
     $link = "data.txt";
-    SwfCharts::drawPlotChart($data, 2);
-    open_flash_chart_object(450, 400, $link );
+    
+
+    
+		    
+   
+
+    $coded = base64_encode(serialize(array("data" => $data, "type" => 2)  ) );
+
+
+    
+    open_flash_chart_object(450, 400, "actions/drawChart.php?data_=2".$coded );
      
     echo "
       <br /><br />

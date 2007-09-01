@@ -11,7 +11,10 @@
   1 - key->valye
   2 - key->{min; avg; max}
    
-  FIXME: These functions need comments 
+
+   Class process data from database, that it could be use in charts.
+   It also displays it in table form
+   
    
   */
   class Statistics {
@@ -25,12 +28,25 @@
      
     private $data = Array();
      
+     /**
+     
+     class constructor to determinate stats type
+     @param date_type   - 1,2 or 3. if 1: stats for day, month, year, if 2: stats for month, year, if 3: stats for year
+     @param stat_type   - 1 or 2. if 1 - stats only for one aggregate function, else for 3 functons (used only if displaying table)
+     
+     */
     public function __construct($date_type, $stat_type)
     {
       $this->date_type = $date_type;
       $this->stat_type = $stat_type;
     }
      
+     /**
+     sets data. 
+     @param year - year
+     @param month - month, if 0 : year stats
+     @param day - day, if 0 : month stats
+     */
     public function set_time($year, $month = 0, $day = 0)
     {
       $this->year = $year;
@@ -38,6 +54,15 @@
       $this->day = $day;
     }
      
+     
+     /**
+     	
+     	set data.
+     	
+     	@param data1 - data from databes
+     	
+     	
+     */
     public function read_data($data1, $data2 = 0, $data3 = 0)
     {
       if ($this->stat_type == 1)
@@ -48,6 +73,12 @@
        
     }
      
+     
+     /**
+     format data. in given key (date) we will have statistics for this date in array
+     @param data - data to insert into array
+     
+     */
     private function formatDataType1($data)
     {
       foreach($data as $row)
@@ -57,6 +88,12 @@
        
     }
      
+     
+     /**
+     format data. in given key (date) we will have statistics for this date in array
+     @param data - data to insert into array
+     
+     */
     private function formatDataType2($data1, $data2 , $data3 )
     {
       foreach ($data1 as $key => $value)
@@ -80,6 +117,13 @@
        
     }
      
+     /**
+     return formated date from key 
+     @param key - key from data table
+     
+     @return formated date
+     
+     */
     private function formatKey($key)
     {
       if ($this->date_type == 1)
@@ -100,15 +144,22 @@
        
     }
      
+     /**
+     test function for print data array
+     
+     */
     public function print_()
     {
       print_r($this->data);
     }
      
     /*
+    
+    print table. 
     I've done lots of style class - so it would be easier to change style of elements
      
-    @parameters
+    @param header_key - header for date row.
+    @param header_data1 - header for stats row
     @return table definition string
     */
     public function print_table($header_key = "", $header_data1 = "" , $header_data2 = "" , $header_data3 = "" )
@@ -159,6 +210,13 @@
        
       return $return;
     }
+    
+    /**
+    return data, that can be use in for example in flash charts
+    
+    @return formated data
+    
+    */
     public function getData()
     {
       return $this->data;

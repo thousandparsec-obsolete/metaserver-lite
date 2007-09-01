@@ -29,21 +29,7 @@
       $g->title('Statistics', 15, '#000080' );
       $data = $g->render();
       
-      // FIXME: Can't really write to the file system!
-      $filename = 'data.txt';
-      if (!$handle = fopen($filename, 'w+'))
-      {
-        // FIXME: exit instead of an exception
-        exit;
-      }
-       
-      // Write $somecontent to our opened file.
-      if (fwrite($handle, $data) === FALSE)
-      {
-        // FIXME: exit instead of an exception
-        exit;
-      }
-       
-      fclose($handle);
+      return $data;
+      
     }
   }
